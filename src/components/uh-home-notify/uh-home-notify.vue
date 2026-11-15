@@ -43,7 +43,8 @@ onMounted(() => {
   >
     <!-- 左侧公告入口 -->
     <view class="flex shrink-0 items-center gap-2 py-2 pr-3" @click="handleGoList">
-      <wd-icon class-prefix="uhemoji2-icon" name="-happy-" size="36rpx" />
+      <!-- 第六轮 #18 反转:公告装饰脸换大肥鱼羽化头小图 -->
+      <image src="/static/mascot/dafeiyu-head.png" mode="aspectFit" class="h-[36rpx] w-[36rpx] shrink-0" />
       <text class="text-sm text-red-400 font-bold">
         公告
       </text>

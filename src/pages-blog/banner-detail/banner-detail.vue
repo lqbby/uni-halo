@@ -1,13 +1,16 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import { onLoad, onPageScroll, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
 import { getBannerDetail } from '@/api/uni-halo'
 import { checkAvatarUrl, checkThumbnailUrl } from '@/utils/url'
 import { getAvatarFallbackText } from '@/utils/avatar'
 import { formatTime } from '@/utils/formatTime'
+import { applyXhhaoDarkPalette, transformXhhaoContent } from '@/utils/xhhao-transform'
+import { useThemeStore } from '@/store/theme'
 import { copyToClipboard } from '@/utils/clipboard'
 import { sleep } from '@/utils/common'
-import { markdownConfig } from '@/config/markdown'
+import { getArticleTagStyle, markdownConfig } from '@/config/markdown'
 import { DataLoadingStatusEnum, useDataLoadingStatus } from '@/hooks/useDataLoadingStatus'
 import { usePageScroll } from '@/hooks/usePageScroll'
 import { usePageTitle } from '@/hooks/usePageTitle'
@@ -47,7 +50,16 @@ const dateText = computed(() => {
   return formatTime({ d: detail.value.date, f: 'yyyy年MM月dd日 星期w' })
 })
 
-const content = computed(() => detail.value?.content || '')
+const { isDark } = storeToRefs(useThemeStore())
+
+/** Banner 详情正文同为 Halo 富文本,同样过一遍小组件转换(无组件时原样返回);深色下再过色值映射 */
+const content = computed(() => {
+  const transformed = transformXhhaoContent(detail.value?.content || '')
+  return isDark.value ? applyXhhaoDarkPalette(transformed) : transformed
+})
+
+/** 正文 tagStyle 按当前外观取浅/深套 */
+const articleTagStyle = computed(() => getArticleTagStyle(isDark.value))
 
 /* ---------------- 分享 ---------------- */
 
@@ -146,9 +158,9 @@ function handleOpenLink() {
       <!-- 无图 -->
       <view
         v-else
-        class="mb-5 h-[320rpx] w-full flex items-center justify-center from-[#ebfabf] to-[#f5fae8] bg-gradient-to-b text-gray-400"
+        class="mb-5 h-[320rpx] w-full flex items-center justify-center uh-img-placeholder text-gray-400"
       >
-        <wd-icon class-prefix="uhemoji-icon" name="-injury" size="72rpx" />
+        <image src="/static/mascot/dafeiyu-empty.png" mode="aspectFit" class="h-[72rpx] w-[72rpx] rounded-[14rpx]" />
       </view>
 
       <view class="text-md text-gray-900 font-bold leading-snug">
@@ -174,7 +186,7 @@ function handleOpenLink() {
         <mp-html
           :content="content" lazy-load :domain="markdownConfig.domain"
           :loading-img="markdownConfig.loadingGif" scroll-table selectable
-          :tag-style="markdownConfig.tagStyle" :container-style="markdownConfig.containStyle"
+          :tag-style="articleTagStyle" :container-style="markdownConfig.containStyle"
           :markdown="true" :show-line-number="true"
           :show-language-name="true" copy-by-long-press
         />

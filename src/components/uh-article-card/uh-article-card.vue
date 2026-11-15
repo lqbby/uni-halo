@@ -133,8 +133,10 @@ const CARD_TYPE_KEY: Record<'home' | 'articles' | 'archives', string> = {
 }
 
 /**
- * 实际生效布局:显式 layout > 按 from 读取对应页面 cardType(首页/笔记列表/笔记归档)> image_top;
- * 窄列(双列网格)统一回退上图下文(与首页行为一致,双列仅支持上图下文)
+ * 实际生效布局:显式 layout > 按 from 读取对应页面 cardType 偏好(首页/笔记列表/笔记归档)> image_top;
+ * 窄列(双列网格)统一回退上图下文(与首页行为一致,双列仅支持上图下文)。
+ * 换肤第八轮(#20 ①组归口):一期 Q5 写死 image_top 已回退——服务端五处 CardType
+ * 默认已同步改为 image_top,默认观感不变,偏好弹窗/后台改归配置管。
  */
 const effectiveLayout = computed<CardLayout>(() => {
   const globalSettings = settings.value
@@ -208,19 +210,20 @@ function handleToUserProfile() {
 
 <template>
   <view
-    class="uh-global-card-glass uh-shadow-xs relative overflow-hidden rounded-xl p-3"
+    class="uh-global-card-glass uh-shadow-xs relative overflow-hidden rounded-2xl p-3"
     :class="cardLayout.container" @click.stop="handleToArticleDetail()"
   >
     <text
       v-if="article.spec.pinned"
-      class="uh-global-card-glass absolute z-1 box-border border rounded-md bg-secondary px-1.5 py-0.5 text-xs text-gray-900"
+      class="absolute z-1 box-border rounded-md bg-primary px-1.5 py-0.5 text-xs text-white"
       :class="cardLayout.pinned"
     >
       置顶
     </text>
     <view
       v-if="article.spec.cover" class="relative overflow-hidden"
-      :class="[isGrid ? 'w-full h-24 rounded-lg' : 'w-full h-36 rounded-lg', cardLayout.cover]"
+      :class="[isGrid ? 'w-full h-24 rounded-lg' : 'w-full rounded-xl', cardLayout.cover]"
+      :style="isGrid ? {} : { aspectRatio: '16 / 9', maxHeight: '20vh' }"
     >
       <wd-img
         width="100%" height="100%" :src="checkThumbnailUrl(article.spec.cover)" mode="aspectFill"
@@ -233,7 +236,11 @@ function handleToUserProfile() {
     </view>
 
     <view class="flex flex-col text-sm" :class="cardLayout.contentWrapper">
-      <view class="truncate text-sm font-bold" :class="cardLayout.title">
+      <!-- 分类 eyebrow(仿博客列表卡:标题上方主色小字分类名) -->
+      <text v-if="!isGrid && article.categories && article.categories.length !== 0" class="text-xs font-semibold tracking-wide text-primary">
+        {{ article.categories[0].spec.displayName }}
+      </text>
+      <view :class="[isGrid ? 'truncate text-sm font-bold' : 'text-[30rpx] font-bold leading-snug line-clamp-2', cardLayout.title]">
         {{ article.spec.title }}
       </view>
       <view
@@ -242,23 +249,14 @@ function handleToUserProfile() {
       >
         {{ article.status?.excerpt }}
       </view>
-      <view v-if="false && !isGrid" class="box-border flex flex-wrap gap-2" :class="cardLayout.tagCategory">
-        <template v-if="article.categories && article.categories.length !== 0">
-          <text
-            v-for="cate in article.categories.slice(0, 2)" :key="cate.metadata.name"
-            class="box-border rounded-full bg-gray-100 px-2 py-[1px] text-xs text-gray-600"
-          >
-            {{ cate.spec.displayName }}
-          </text>
-        </template>
-        <template v-if="article.tags && article.tags.length !== 0">
-          <text
-            v-for="tag in article.tags.slice(0, 2)" :key="tag.metadata.name"
-            class="box-border rounded-full bg-gray-100 px-2 py-[1px] text-xs text-gray-600"
-          >
-            # {{ tag.spec.displayName }}
-          </text>
-        </template>
+      <!-- 标签胶囊(换肤一期启用:主题 regular 按钮色胶囊,分类已由上方 eyebrow 承担) -->
+      <view v-if="!isGrid && article.tags && article.tags.length !== 0" class="box-border flex flex-wrap gap-2" :class="cardLayout.tagCategory">
+        <text
+          v-for="tag in article.tags.slice(0, 3)" :key="tag.metadata.name"
+          class="uh-chip"
+        >
+          {{ tag.spec.displayName }}
+        </text>
       </view>
       <view class="flex items-center text-xs text-gray-500" :class="cardLayout.footer">
         <view class="flex items-center" :class="cardLayout.authorGroup" @click.stop="handleToUserProfile()">

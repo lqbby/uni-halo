@@ -110,7 +110,7 @@ function handleToSearch() {
           <!-- 无图 -->
           <view
             v-else
-            class="h-full w-full flex items-center justify-center from-[#ebfabf] to-[#f5fae8] bg-gradient-to-b text-gray-400"
+            class="h-full w-full flex items-center justify-center uh-img-placeholder text-gray-400"
           >
             <wd-icon class-prefix="uhemoji-icon" name="-injury" size="72rpx" />
           </view>
@@ -124,7 +124,7 @@ function handleToSearch() {
           class="uh-shadow-primary mt-3 box-border max-w-[45vw] flex items-center justify-center truncate border rounded-full px-3 py-1.5"
           :style="{
             backdropFilter: 'blur(2rpx)',
-            backgroundColor: 'rgba(215, 249, 76, 0.9)',
+            backgroundColor: 'rgba(83, 163, 242, 0.9)',
           }"
         >
           <text class="truncate text-3xs text-gray-900 font-semibold">

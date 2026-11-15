@@ -152,7 +152,7 @@ onShareTimeline(() => ({
 </script>
 
 <template>
-  <view class="app-page min-h-screen w-screen flex flex-col bg-[#fafafd]">
+  <view class="app-page min-h-screen w-screen flex flex-col bg-page">
     <!-- 自定义导航 -->
     <uh-navbar :scroll-y="scrollY" :default-title="navbarTitle" title-color="text-gray-900" />
 

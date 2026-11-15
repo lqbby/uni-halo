@@ -81,7 +81,8 @@ onMounted(() => {
       <!-- 顶部 -->
       <view class="flex items-center justify-between">
         <view class="flex items-center gap-2">
-          <wd-icon class-prefix="uhemoji2-icon" name="-happy-" size="36rpx" />
+          <!-- 第六轮 #18 反转:公告装饰脸换大肥鱼羽化头小图 -->
+          <image src="/static/mascot/dafeiyu-head.png" mode="aspectFit" class="h-[36rpx] w-[36rpx] shrink-0" />
           <text class="text-md text-gray-900 font-semibold">
             最新公告
           </text>

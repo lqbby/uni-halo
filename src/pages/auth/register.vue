@@ -25,7 +25,7 @@ const pageTitle = usePageTitle('register', '注册')
 const tokenStore = useTokenStore()
 
 /* ---------- 应用名称(欢迎语展示) ---------- */
-const appInfo = computed(() => configs.value.featureConfig?.profile?.appInfo?.name || 'uni-halo')
+const appInfo = computed(() => configs.value.featureConfig?.profile?.appInfo?.name || 'LQBBY')
 
 /* ---------- 注册开关(Halo /actuator/globalinfo,匿名可访问) ---------- */
 const registrationAllowed = ref(true)
@@ -318,25 +318,25 @@ function goBack() {
 </script>
 
 <template>
-  <view class="relative box-border min-h-screen w-screen flex flex-col overflow-hidden bg-[#f5fae8]">
+  <view class="relative box-border min-h-screen w-screen flex flex-col overflow-hidden bg-page">
     <!-- 顶部自定义导航 -->
     <uh-navbar :default-title="pageTitle" :need-placeholder="false" />
 
     <view
-      class="pointer-events-none fixed left-0 top-0 z-0 h-[46vh] w-full from-[#d9f77f] via-[#e8fbaf] to-[#f5fae8] bg-gradient-to-b"
+      class="pointer-events-none fixed left-0 top-0 z-0 h-[46vh] w-full uh-auth-wash"
     />
 
     <view
       class="breathe uh-blur-52 pointer-events-none absolute left-[-80rpx] top-[calc(var(--status-bar-height)+40rpx)] z-0 h-[280rpx] w-[280rpx] rounded-full bg-white/40"
     />
     <view
-      class="uh-blur-52 pointer-events-none absolute right-[-60rpx] top-[180rpx] z-0 h-[220rpx] w-[220rpx] rounded-full bg-[rgba(184,236,63,0.28)]"
+      class="uh-blur-52 pointer-events-none absolute right-[-60rpx] top-[180rpx] z-0 h-[220rpx] w-[220rpx] rounded-full bg-[rgba(83,163,242,0.28)]"
     />
     <view
-      class="uh-blur-44 pointer-events-none absolute bottom-[120rpx] right-[80rpx] z-0 h-[180rpx] w-[180rpx] rounded-full bg-[#ffd53d] opacity-20"
+      class="uh-blur-44 pointer-events-none absolute bottom-[120rpx] right-[80rpx] z-0 h-[180rpx] w-[180rpx] rounded-full uh-deco-blob opacity-20"
     />
     <view
-      class="uh-blur-44 pointer-events-none absolute bottom-[280rpx] left-[-40rpx] z-0 h-[200rpx] w-[200rpx] rounded-full bg-[#ebfabf] opacity-90"
+      class="uh-blur-44 pointer-events-none absolute bottom-[280rpx] left-[-40rpx] z-0 h-[200rpx] w-[200rpx] rounded-full uh-deco-blob opacity-90"
     />
 
     <view class="relative z-10 box-border h-screen w-screen flex flex-col items-center justify-center gap-y-6 px-6">
@@ -470,7 +470,7 @@ function goBack() {
   box-sizing: border-box;
   height: 76rpx;
   padding: 0 24rpx;
-  background-color: rgb(255 255 255 / 65%);
+  background-color: var(--eth-glass-bg);
   border-radius: 24rpx;
 }
 
@@ -481,7 +481,7 @@ function goBack() {
   justify-content: center;
   width: 28rpx;
   height: 28rpx;
-  background-color: rgb(255 255 255 / 65%);
+  background-color: var(--eth-glass-bg);
   border: 2rpx solid rgb(0 0 0 / 25%);
   border-radius: 50%;
 

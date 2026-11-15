@@ -464,11 +464,11 @@ export function useCanvasDraw(options: IUseCanvasDrawOptions = {}) {
       renderImage(ctx, drawable, img.x, img.y, img.w, img.h, img.rotation)
     else
       loadImageDrawable(img.src).then(() => redrawImagePreview()).catch(() => {})
-    // 选中框:随旋转的虚线矩形(主题色,与 UnoCSS theme.primary 的 #B9E424 回退值一致)
+    // 选中框:随旋转的虚线矩形(主题色,与 UnoCSS theme.primary 的 #53A3F2 一致)
     ctx.save()
     ctx.translate(img.x, img.y)
     ctx.rotate(img.rotation)
-    ctx.strokeStyle = '#B9E424'
+    ctx.strokeStyle = '#53A3F2'
     ctx.lineWidth = 1.5
     ctx.setLineDash([6, 4])
     ctx.strokeRect(-img.w / 2 - 4, -img.h / 2 - 4, img.w + 8, img.h + 8)

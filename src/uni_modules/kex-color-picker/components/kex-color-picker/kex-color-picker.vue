@@ -316,13 +316,13 @@
 		v: 58
 	})
 	const alpha = ref(1)
-	const originCss = ref('rgba(185, 228, 36, 1)')
+	const originCss = ref('rgba(83, 163, 242, 1)')
 	const svLeft = ref(0)
 	const svTop = ref(0)
 	const hueLeft = ref(0)
 	const alphaLeft = ref(0)
 	const draft = reactive({
-		hex: '#B9E424',
+		hex: '#53A3F2',
 		r: 13,
 		g: 148,
 		b: 136,
@@ -436,7 +436,7 @@
 	}
 
 	function syncFromModel() {
-		const parsed = parseColor(props.modelValue || '#B9E424')
+		const parsed = parseColor(props.modelValue || '#53A3F2')
 		const next = rgbToHsv(parsed.r, parsed.g, parsed.b)
 		hsv.h = next.h
 		hsv.s = next.s
@@ -1151,7 +1151,7 @@
 		flex: 1;
 		padding: 10rpx 22rpx;
 		border-radius: 16rpx;
-		background-color: var(--wot-color-theme, #B9E424);
+		background-color: var(--wot-color-theme, #53A3F2);
 		min-width: 96rpx;
 		text-align: center;
 		/* #ifdef H5 */
@@ -1301,7 +1301,7 @@
 	}
 
 	.kex-cp__fmt--on .kex-cp__fmt-text {
-		color: var(--wot-color-theme, #B9E424);
+		color: var(--wot-color-theme, #53A3F2);
 	}
 
 	.kex-cp__inputs {

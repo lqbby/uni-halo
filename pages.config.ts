@@ -4,10 +4,11 @@ import { tabBar } from './src/tabbar/config'
 export default defineUniPages({
   globalStyle: {
     navigationStyle: 'default',
-    navigationBarTitleText: 'UniHalo',
-    navigationBarBackgroundColor: '#ffffff',
-    navigationBarTextStyle: 'black',
-    backgroundColor: '#F8F8F8',
+    navigationBarTitleText: 'LQBBY',
+    // @变量由 src/theme.json 按系统外观提供(需 manifest 开启 darkmode)
+    navigationBarBackgroundColor: '@navBgColor',
+    navigationBarTextStyle: '@navTextStyle',
+    backgroundColor: '@bgColor',
   },
   easycom: {
     autoscan: true,

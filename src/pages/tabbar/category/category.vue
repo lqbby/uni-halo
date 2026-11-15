@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { onPageScroll, onPullDownRefresh, onReachBottom, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
-import { getCategoryList } from '@/api/halo'
+import { getCategoryList, getPostList } from '@/api/halo'
 import { useAppConfigStore } from '@/store/appConfig'
 import { checkThumbnailUrl } from '@/utils/url'
 import { sleep } from '@/utils/common'
@@ -16,7 +16,7 @@ definePage({
     navigationBarTitleText: '分类',
     navigationStyle: 'custom',
     enablePullDownRefresh: true,
-    backgroundColor: '#f6f3ee',
+    backgroundColor: '@bgColor',
   },
 })
 
@@ -28,7 +28,7 @@ const appConfigStore = useAppConfigStore()
 
 const { configs: haloConfigs, auditData, auditModeEnabled: calcAuditModeEnabled } = storeToRefs(appConfigStore)
 
-const siteName = computed(() => haloConfigs.value.featureConfig?.profile?.appInfo?.name || 'uni-halo')
+const siteName = computed(() => haloConfigs.value.featureConfig?.profile?.appInfo?.name || 'LQBBY')
 
 /* ---------------- 分享 ---------------- */
 
@@ -50,6 +50,40 @@ const queryParams = ref({
   fieldSelector: ['spec.hideFromList=false'],
 })
 const dataList = ref<ICategory[]>([])
+
+/* ---------------- 分类封面兜底 ----------------
+ * 实证(2026-11-15):Category.spec.cover 字段存在但 7 个分类全为空值,
+ * 分类本身没有图。兜底:拉一次全量文章,按文章 spec.categories(分类 metadata.name)
+ * 建「分类 → 该分类最新文章封面」映射,给无封面分类补图;只拉一次,分页复用。
+ */
+const postCoverMap = ref<Record<string, string>>({})
+const postCoverMapLoaded = ref(false)
+
+async function ensurePostCoverMap() {
+  if (postCoverMapLoaded.value) {
+    return
+  }
+  postCoverMapLoaded.value = true
+  try {
+    const res = await getPostList({ page: 1, size: 100 })
+    const map: Record<string, string> = {}
+    for (const post of res.data.items || []) {
+      const cover = checkThumbnailUrl(post.spec?.cover, true)
+      if (!cover) {
+        continue
+      }
+      for (const categoryName of post.spec?.categories || []) {
+        if (!map[categoryName]) {
+          map[categoryName] = cover
+        }
+      }
+    }
+    postCoverMap.value = map
+  }
+  catch (err) {
+    console.error('获取分类封面兜底失败', err)
+  }
+}
 
 function handleResetInit() {
   dataList.value = []
@@ -101,11 +135,19 @@ async function handleGetData() {
   try {
     const res = await getCategoryList({ ...queryParams.value })
 
-    const tempItems = res.data.items.map(item => ({
-      ...item,
-      postCount: item.postCount ?? 0,
-      spec: { ...item.spec, cover: checkThumbnailUrl(item.spec.cover, true) },
-    }))
+    // 有分类缺封面时才拉兜底映射(分类自身 cover 全为空,见上方说明)
+    if (res.data.items.some(item => !item.spec.cover)) {
+      await ensurePostCoverMap()
+    }
+
+    const tempItems = res.data.items.map((item) => {
+      const ownCover = checkThumbnailUrl(item.spec.cover, true)
+      return {
+        ...item,
+        postCount: item.postCount ?? 0,
+        spec: { ...item.spec, cover: ownCover || postCoverMap.value[item.metadata.name] || '' },
+      }
+    })
 
     dataList.value = loadMoreStatus.value.active
       ? dataList.value.concat(tempItems)
@@ -185,33 +227,35 @@ onReachBottom(() => {
     <uh-data-loading v-if="loadingStatus !== DataLoadingStatusEnum.Success" min-height="65vh" :loading-status="loadingStatus" />
 
     <block v-else>
-      <view class="grid grid-cols-2 mt-3 box-border gap-2.5 p-3 pt-0">
+      <view class="grid grid-cols-2 mt-3 box-border gap-3 p-3 pt-0">
         <view
           v-for="(item, index) in dataList" :key="index"
-          class="uh-global-card-glass relative box-border w-full overflow-hidden rounded-xl"
+          class="uh-global-card-glass uh-shadow-xs box-border w-full overflow-hidden rounded-2xl"
           @click="handleToCategory(item)"
         >
-          <view class="h-32 w-full">
+          <!-- 封面:分类自身 cover 优先,缺失时已在数据层用该分类最新文章封面兜底 -->
+          <view class="h-28 w-full overflow-hidden">
             <wd-img v-if="item.spec.cover" :src="item.spec.cover" class="block h-full w-full" mode="aspectFill" lazy-load>
               <template #loading>
                 <wd-loading size="64rpx" custom-class="text-primary" />
               </template>
             </wd-img>
-            <!-- 无图 -->
-            <view v-else class="h-full w-full flex items-center justify-center from-[#ebfabf] to-[#f5fae8] bg-gradient-to-b text-gray-400">
-              <wd-icon class-prefix="uhemoji-icon" name="-injury" size="72rpx" />
+            <!-- 仍无图(分类下无文章):主题浅底 + 分类名首字,不用 emoji 占位 -->
+            <view v-else class="uh-img-placeholder h-full w-full flex items-center justify-center">
+              <text class="text-3xl font-bold opacity-60">{{ item.spec.displayName?.slice(0, 1) }}</text>
             </view>
           </view>
-          <view
-            class="absolute bottom-0 left-0 h-[140rpx] w-full from-black/0 to-black/30 bg-gradient-to-b"
-          />
-          <view class="absolute bottom-0 left-0 box-border w-full flex flex-col gap-1 p-2.5">
-            <text class="truncate text-2xs text-white font-bold">
-              {{ item.spec.displayName }}
-            </text>
-            <text v-if="item.postCount" class="text-xs text-white opacity-80">
-              共 {{ item.postCount }} 篇笔记
-            </text>
+          <!-- 信息区:卡面实底上的主题排版(名称 + 篇数 + 主色箭头) -->
+          <view class="box-border w-full flex items-center gap-2 px-3 py-2.5">
+            <view class="min-w-0 flex flex-1 flex-col gap-0.5">
+              <text class="truncate text-sm text-gray-900 font-bold">
+                {{ item.spec.displayName }}
+              </text>
+              <text class="text-xs text-gray-500">
+                共 {{ item.postCount ?? 0 }} 篇
+              </text>
+            </view>
+            <wd-icon name="arrow-right" size="28rpx" class="shrink-0 text-primary" />
           </view>
         </view>
       </view>

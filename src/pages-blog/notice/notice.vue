@@ -239,8 +239,8 @@
 					</wd-img>
 					<!-- 无图 -->
 					<view v-else
-						class="mr-3 h-18 w-24 shrink-0 flex items-center justify-center from-[#ebfabf] to-[#f5fae8] bg-gradient-to-b text-gray-400">
-						<wd-icon class-prefix="uhemoji-icon" name="-injury" size="48rpx" />
+						class="mr-3 h-18 w-24 shrink-0 flex items-center justify-center uh-img-placeholder text-gray-400">
+						<image src="/static/mascot/dafeiyu-empty.png" mode="aspectFit" class="h-[48rpx] w-[48rpx] rounded-[10rpx]" />
 					</view>
 					<view class="min-w-0 flex-1 flex flex-col justify-between">
 						<view class="truncate text-sm text-gray-900 font-bold leading-snug">

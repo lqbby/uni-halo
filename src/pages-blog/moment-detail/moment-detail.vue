@@ -42,7 +42,7 @@ const bloggerInfo = computed(() => {
 
 const siteName = computed(() => {
   const appInfo = haloConfigs.value.featureConfig?.profile?.appInfo
-  return appInfo?.name || bloggerInfo.value.nickname || 'uni-halo'
+  return appInfo?.name || bloggerInfo.value.nickname || 'LQBBY'
 })
 
 /** 瞬间页配置 */
@@ -429,7 +429,12 @@ onShareTimeline(() => ({
         class="uh-global-card-glass box-border h-[72rpx] flex flex-1 items-center justify-center gap-x-1 border rounded-full px-4 shadow-none"
         :class="[hasUpvoted() ? 'text-primary' : 'text-gray-900']" @click="handleDoLikesClick"
       >
-        <wd-icon class-prefix="uhemoji-icon" name="-kiss-" size="36rpx" />
+        <!-- 第六轮 #18 反转:三图标全换大肥鱼头;未赞=灰度头+低透明、已赞=全彩头 -->
+        <image
+          :src="hasUpvoted() ? '/static/mascot/dafeiyu-head.png' : '/static/mascot/dafeiyu-head-gray.png'"
+          mode="aspectFit" class="h-[36rpx] w-[36rpx] shrink-0"
+          :class="hasUpvoted() ? '' : 'opacity-50'"
+        />
         <text class="shrink-0 text-xs text-gray-900 font-semibold">点赞</text>
       </view>
       <!-- 评论 -->
@@ -438,7 +443,7 @@ onShareTimeline(() => ({
         class="uh-global-card-glass box-border h-[72rpx] flex flex-1 items-center justify-center gap-x-1 border rounded-full px-4 shadow-none"
         @click="handleToComment()"
       >
-        <wd-icon class-prefix="uhemoji-icon" name="-thinking" size="36rpx" />
+        <image src="/static/mascot/dafeiyu-head.png" mode="aspectFit" class="h-[36rpx] w-[36rpx] shrink-0" />
         <text class="shrink-0 text-xs text-gray-900 font-semibold">评论</text>
       </view>
       <!-- 收藏 -->
@@ -446,7 +451,11 @@ onShareTimeline(() => ({
         class="uh-global-card-glass box-border h-[72rpx] flex flex-1 items-center justify-center gap-x-1 border rounded-full px-4 shadow-none"
         @click="handleToggleMomentFavorite"
       >
-        <wd-icon class-prefix="uhemoji-icon" name="-smile-" size="36rpx" />
+        <image
+          :src="momentFavorited ? '/static/mascot/dafeiyu-head.png' : '/static/mascot/dafeiyu-head-gray.png'"
+          mode="aspectFit" class="h-[36rpx] w-[36rpx] shrink-0"
+          :class="momentFavorited ? '' : 'opacity-50'"
+        />
         <text
           class="shrink-0 text-xs font-semibold"
           :class="[momentFavorited ? 'text-primary' : 'text-gray-900']"

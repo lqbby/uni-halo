@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onLoad, onPageScroll, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
+import { storeToRefs } from 'pinia'
 import { useAppConfigStore } from '@/store/appConfig'
 import { checkUrl } from '@/utils/url'
 import { usePageScroll } from '@/hooks/usePageScroll'
@@ -17,10 +18,20 @@ const { scrollY, updatePageScrollValue } = usePageScroll()
 const pageTitle = usePageTitle('aboutProject', '关于项目')
 const appConfigStore = useAppConfigStore()
 
+const { configs } = storeToRefs(appConfigStore)
+
+/**
+ * 应用信息:优先插件端 appInfo 配置(与登录页同源),缺省回退本站信息 LQBBY + 本地 logo。
+ * 复验轮 #10 附带:插件未配置前 appInfo 是上游演示值(name=uni-halo、logo=插件 assets 演示图),
+ * 演示值按未配置处理;哥哥在插件后台改成自己的后自动生效。
+ */
 const appInfo = computed(() => {
+  const info = configs.value.featureConfig?.profile?.appInfo
+  const isDemoLogo = !!info?.logo && info.logo.includes('/plugins/uni-halo/assets/')
+  const isDemoName = (info?.name || '').toLowerCase() === 'uni-halo'
   return {
-    name: 'UniHalo',
-    logo: checkUrl('/plugins/uni-halo/assets/static/logo.png'),
+    name: info?.name && !isDemoName ? info.name : 'LQBBY',
+    logo: info?.logo && !isDemoLogo ? checkUrl(info.logo) : '/static/logo.png',
   }
 })
 
@@ -37,12 +48,9 @@ onShareTimeline(() => ({
 }))
 
 const links = [
-  { title: '小莫唐尼', value: 'https://www.xiaoxiaomo.cn', copy: 'https://www.xiaoxiaomo.cn', tip: '作者主页地址已复制', tileColor: '#26a69a', tileLetter: '作' },
-  { title: '作者博客', value: 'https://blog.xiaoxiaomo.cn', copy: 'https://blog.xiaoxiaomo.cn', tip: '作者博客地址已复制', tileColor: '#7e57c2', tileLetter: '博' },
-  { title: '官网主页', value: 'https://uni-halo.ialley.cn', copy: 'https://uni-halo.ialley.cn', tip: '官网地址已复制', tileColor: '#039be5', tileLetter: '官' },
-  { title: '开源组织', value: 'https://github.com/uni-halo', copy: 'https://github.com/uni-halo', tip: 'UniHalo 开源组织', tileColor: '#4BAB54', tileLetter: 'U' },
-  { title: 'Github', value: 'https://github.com/uni-halo/uni-halo', copy: 'https://github.com/uni-halo/uni-halo', tip: 'Github地址已复制', tileColor: '#24292f', tileLetter: 'G' },
-  { title: '应用市场', value: 'https://www.halo.run/store/apps/app-aukgwe3y', copy: 'https://www.halo.run/store/apps/app-aukgwe3y', tip: '插件应用市场已复制', tileColor: '#0051B0', tileLetter: '应' },
+  { title: '博客主页', value: 'https://www.lqbby.com', copy: 'https://www.lqbby.com', tip: '博客地址已复制', tileColor: '#53A3F2', tileLetter: '博' },
+  { title: 'GitHub', value: 'https://github.com/lqbby', copy: 'https://github.com/lqbby', tip: 'GitHub 地址已复制', tileColor: '#24292f', tileLetter: 'G' },
+  { title: 'RSS 订阅', value: 'https://www.lqbby.com/rss.xml', copy: 'https://www.lqbby.com/rss.xml', tip: 'RSS 地址已复制', tileColor: '#DD8736', tileLetter: 'R' },
 ]
 
 function copyText(content: string, tips: string) {
@@ -69,8 +77,8 @@ onLoad(() => {
     <!-- 自定义导航 -->
     <uh-navbar :scroll-y="scrollY" :default-title="pageTitle" title-color="text-gray-900" />
 
-    <view class="uh-blur-xl fixed top-8 h-28 w-28 rounded-full bg-[rgba(185,228,36,0.32)] -right-8" />
-    <view class="uh-blur-xl fixed top-36 h-24 w-24 rounded-full bg-[rgba(215,249,76,0.45)] -left-10" />
+    <view class="uh-blur-xl fixed top-8 h-28 w-28 rounded-full bg-[rgba(83,163,242,0.22)] -right-8" />
+    <view class="uh-blur-xl fixed top-36 h-24 w-24 rounded-full bg-[rgba(99,179,255,0.26)] -left-10" />
 
     <view class="flex-1">
       <view class="relative">
@@ -85,11 +93,11 @@ onLoad(() => {
             {{ appInfo.name }}
           </view>
           <view class="mt-3 flex items-center gap-2">
-            <text class="rounded-full bg-secondary px-3 py-1 text-[20rpx] text-gray-900">Apache 2.0</text>
-            <text class="rounded-full bg-gray-100 px-3 py-1 text-[20rpx] text-gray-900">UniApp × Halo</text>
+            <text class="uh-chip">LQBBY 博客</text>
+            <text class="uh-chip">Halo 驱动</text>
           </view>
           <view class="mt-4 text-center text-xs text-gray-500 leading-relaxed">
-            基于 uni-app 打造的 Halo 博客跨端客户端
+            LQBBY 的个人博客小程序，同步展示博客的文章与动态
           </view>
         </view>
       </view>

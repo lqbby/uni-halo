@@ -19,7 +19,7 @@ definePage({
 })
 
 const appConfigStore = useAppConfigStore()
-const siteName = computed(() => appConfigStore.configs.featureConfig?.profile?.appInfo?.name || 'uni-halo')
+const siteName = computed(() => appConfigStore.configs.featureConfig?.profile?.appInfo?.name || 'LQBBY')
 /** 页面标题（插件端可配置，留空回退内置默认） */
 const pageTitle = usePageTitle('footprint', '足迹')
 

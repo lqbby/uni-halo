@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useThemeStore } from '@/store/theme'
 
 defineOptions({
   options: {
@@ -24,12 +26,13 @@ const windowInfo = uni.getWindowInfo()
 const statusBarHeight = computed(() => windowInfo.statusBarHeight)
 
 const maxAlpha = ref(0.8)
+const { isDark } = storeToRefs(useThemeStore())
 const customStyle = computed(() => {
   const alpha = Math.min(props.scrollY / 360, maxAlpha.value)
   return {
     paddingTop: `${statusBarHeight.value}px`,
     backdropFilter: 'blur(4rpx)',
-    backgroundColor: `rgba(255, 255, 255, ${alpha})`,
+    backgroundColor: isDark.value ? `rgba(15, 20, 26, ${alpha})` : `rgba(255, 255, 255, ${alpha})`,
   }
 })
 const scrollThreshold = computed(() => {

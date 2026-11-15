@@ -48,7 +48,7 @@ const bloggerInfo = computed(() => {
 
 const siteName = computed(() => {
   const appInfo = haloConfigs.value.featureConfig?.profile?.appInfo
-  return appInfo?.name || bloggerInfo.value.nickname || 'uni-halo'
+  return appInfo?.name || bloggerInfo.value.nickname || 'LQBBY'
 })
 
 const { pluginId, checking, tips, available: uniHaloPluginAvailable, check: checkPluginAvailable } = usePluginAvailable({

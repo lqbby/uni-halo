@@ -53,10 +53,12 @@ const detailHtml = computed(() => maintenance.value?.description || '')
 /** 维护说明(纯文本;标题下方按行直接展示,留空展示设计稿默认文案) */
 const noticeLines = computed(() => (maintenance.value?.notice || '').split('\n'))
 
-/** 应用信息 logo(相对插件内置资源路径 → BASE_API 补全) */
+/** 应用信息 logo(相对插件内置资源路径 → BASE_API 补全;
+ * 第六轮 #18 核查补齐:插件演示 logo 按未配置处理,回退终点对齐关于项目页 = 本地 LQBBY logo,不再落 -injury 表情回退) */
 const appLogo = computed(() => {
   const logo = configs.value.featureConfig?.profile?.appInfo?.logo
-  return logo ? checkUrl(logo) : ''
+  const isDemoLogo = !!logo && logo.includes('/plugins/uni-halo/assets/')
+  return logo && !isDemoLogo ? checkUrl(logo) : '/static/logo.png'
 })
 
 /** 倒计时目标:scheduled → startTime / active → endTime */
@@ -263,36 +265,21 @@ onUnload(() => {
 </script>
 
 <template>
-  <view class="relative min-h-screen w-screen flex flex-col justify-center overflow-hidden bg-[#f5fae8]">
+  <view class="relative min-h-screen w-screen flex flex-col justify-center overflow-hidden bg-page">
     <!-- 背景 -->
     <view
-      class="lef-0 fixed top-0 z-0 h-[46vh] w-full from-[#d9f77f] via-[#e8fbaf] to-[#f5fae8] bg-gradient-to-b"
+      class="lef-0 fixed top-0 z-0 h-[46vh] w-full uh-auth-wash"
     />
 
     <!-- 刷新 -->
     <uh-data-loading v-if="viewState === 'loading'" />
 
-    <!-- 拉取失败 -->
-    <view
-      v-else-if="viewState === 'error'"
-      class="relative z-10 w-full flex flex-col items-center justify-center px-10 py-48 text-center"
-    >
-      <wd-icon class-prefix="uhemoji-icon" name="-thinking" size="140rpx" />
-      <text class="text-md mt-6 text-gray-900 font-bold">
-        服务暂时无法访问
-      </text>
-      <text class="mt-3 text-xs text-gray-500">
-        站点可能正在维护中，请稍后重试
-      </text>
-      <view class="mt-10">
-        <uh-button
-          custom-class="uh-global-card-glass border flex-1 !py-2.5 !px-8 !rounded-full font-semibold !text-3xs !bg-primary"
-          @click="load(true)"
-        >
-          刷新试试
-        </uh-button>
-      </view>
-    </view>
+    <!-- 拉取失败(第五轮 #18:原自画错误态收编 uh-data-loading,错误图走统一抱箱款) -->
+    <uh-data-loading
+      v-else-if="viewState === 'error'" class="relative z-10" loading-status="error"
+      error-text="服务暂时无法访问" error-sub-text="站点可能正在维护中，请稍后重试"
+      @refresh="load(true)"
+    />
     <!-- 维护页 -->
     <view v-else class="relative z-10 w-full w-full flex flex-1 flex-col items-center justify-center">
       <view class="relative box-border w-full px-6 pb-4 pt-[calc(var(--status-bar-height)+76rpx)] text-center">
@@ -300,7 +287,7 @@ onUnload(() => {
           class="breathe uh-blur-52 pointer-events-none absolute left-[-60rpx] top-[104rpx] z-0 h-[260rpx] w-[260rpx] rounded-full bg-white/40"
         />
         <view
-          class="uh-blur-52 pointer-events-none absolute right-[-48rpx] top-[40rpx] z-0 h-[200rpx] w-[200rpx] rounded-full bg-[rgba(184,236,63,0.28)]"
+          class="uh-blur-52 pointer-events-none absolute right-[-48rpx] top-[40rpx] z-0 h-[200rpx] w-[200rpx] rounded-full bg-[rgba(83,163,242,0.28)]"
         />
         <view
           class="uh-blur-52 pointer-events-none absolute bottom-[-40rpx] right-[72rpx] z-0 h-[160rpx] w-[160rpx] rounded-full bg-white/40"
@@ -308,7 +295,7 @@ onUnload(() => {
 
         <view class="relative z-2 mx-auto mt-[44rpx] h-[236rpx] w-[236rpx]">
           <view
-            class="bob uh-global-card-glass absolute inset-0 flex items-center justify-center border-4 border-white rounded-full from-[#ebfabf] to-[#b8ec3f] bg-gradient-to-br"
+            class="bob uh-global-card-glass absolute inset-0 flex items-center justify-center border-4 border-white rounded-full uh-logo-ring"
           >
             <image v-if="appLogo" class="h-full w-full rounded-full" :src="appLogo" mode="aspectFill" />
             <wd-icon
@@ -327,7 +314,7 @@ onUnload(() => {
             <wd-icon name="settings" size="32rpx" />
           </view>
           <view
-            class="uh-shadow-sm uh-badge absolute bottom-[-28rpx] left-1/2 inline-flex items-center whitespace-nowrap border-2 border-[#ebfabf] rounded-full border-solid bg-[#ebfabf] px-[24rpx] py-[12rpx] text-[22rpx] font-extrabold leading-none"
+            class="uh-shadow-sm uh-badge absolute bottom-[-28rpx] left-1/2 inline-flex items-center whitespace-nowrap border-2 [border-color:var(--wot-color-secondary)] rounded-full border-solid uh-deco-blob px-[24rpx] py-[12rpx] text-[22rpx] font-extrabold leading-none"
           >
             MAINTENANCE
           </view>
@@ -352,10 +339,10 @@ onUnload(() => {
       <!-- ===== 内容区 ===== -->
       <view class="relative z-10 w-full">
         <view
-          class="uh-blur-44 pointer-events-none absolute left-[64rpx] top-[-52rpx] z-0 h-[192rpx] w-[192rpx] rounded-full bg-[#ebfabf] opacity-90"
+          class="uh-blur-44 pointer-events-none absolute left-[64rpx] top-[-52rpx] z-0 h-[192rpx] w-[192rpx] rounded-full uh-deco-blob opacity-90"
         />
         <view
-          class="uh-blur-44 pointer-events-none absolute right-[-52rpx] top-[300rpx] z-0 h-[168rpx] w-[168rpx] rounded-full bg-[#ffd53d] opacity-20"
+          class="uh-blur-44 pointer-events-none absolute right-[-52rpx] top-[300rpx] z-0 h-[168rpx] w-[168rpx] rounded-full uh-deco-blob opacity-20"
         />
         <view
           class="relative z-1 box-border w-full flex flex-col items-center gap-[28rpx] px-6 pb-[68rpx] pt-[32rpx]"
@@ -376,7 +363,7 @@ onUnload(() => {
               {{ countdownPrefix }}
             </view>
             <view class="mt-4 w-full flex justify-center gap-4">
-              <view class="flex-1 rounded-[24rpx] bg-[#f4fbe0] px-[8rpx] pb-[16rpx] pt-[18rpx]">
+              <view class="flex-1 rounded-[24rpx] uh-soft-bg px-[8rpx] pb-[16rpx] pt-[18rpx]">
                 <text class="block text-[42rpx] text-[#17181a] font-black leading-none tabular-nums">
                   {{ countdownParts.days }}
                 </text>
@@ -387,7 +374,7 @@ onUnload(() => {
                   DAY
                 </text>
               </view>
-              <view class="flex-1 rounded-[24rpx] bg-[#f4fbe0] px-[8rpx] pb-[16rpx] pt-[18rpx]">
+              <view class="flex-1 rounded-[24rpx] uh-soft-bg px-[8rpx] pb-[16rpx] pt-[18rpx]">
                 <text class="block text-[42rpx] text-primary font-black leading-none tabular-nums">
                   {{ countdownParts.hours }}
                 </text>
@@ -398,7 +385,7 @@ onUnload(() => {
                   HR
                 </text>
               </view>
-              <view class="flex-1 rounded-[24rpx] bg-[#f4fbe0] px-[8rpx] pb-[16rpx] pt-[18rpx]">
+              <view class="flex-1 rounded-[24rpx] uh-soft-bg px-[8rpx] pb-[16rpx] pt-[18rpx]">
                 <text class="block text-[42rpx] text-[#17181a] font-black leading-none tabular-nums">
                   {{ countdownParts.minutes }}
                 </text>
@@ -409,7 +396,7 @@ onUnload(() => {
                   MIN
                 </text>
               </view>
-              <view class="flex-1 rounded-[24rpx] bg-[#f4fbe0] px-[8rpx] pb-[16rpx] pt-[18rpx]">
+              <view class="flex-1 rounded-[24rpx] uh-soft-bg px-[8rpx] pb-[16rpx] pt-[18rpx]">
                 <text class="block text-[42rpx] text-[#17181a] font-black leading-none tabular-nums">
                   {{ countdownParts.seconds }}
                 </text>

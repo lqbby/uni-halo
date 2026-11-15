@@ -159,8 +159,8 @@ export default {
 <style scoped>
 /* ===== 卡片容器（对齐文章卡片：黄色边框 + 角标） ===== */
 .uh-douban-card {
-  --uh-primary: var(--wot-color-theme, #b9e424);
-  --uh-primary-soft: var(--wot-primary-1, #f4fbe0);
+  --uh-primary: var(--wot-color-theme, #53A3F2);
+  --uh-primary-soft: var(--wot-primary-1, #E2F0FF);
   width: 100%;
   box-sizing: border-box;
   position: relative;

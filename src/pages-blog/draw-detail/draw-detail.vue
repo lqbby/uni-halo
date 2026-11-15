@@ -175,7 +175,7 @@ onPullDownRefresh(() => {
 
 /* ---------------- 分享 ---------------- */
 const siteName = computed(() =>
-  haloConfigs.value?.featureConfig?.profile?.appInfo?.name || 'uni-halo')
+  haloConfigs.value?.featureConfig?.profile?.appInfo?.name || 'LQBBY')
 
 onShareAppMessage(() => {
   const title = isPuzzle.value ? '我发现了一幅画作，快来猜猜看是什么？' : draw.value?.spec.title

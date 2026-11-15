@@ -189,10 +189,10 @@ function handleDone() {
 </script>
 
 <template>
-  <view class="box-border min-h-screen w-screen flex flex-col items-center justify-center bg-[#f5fae8]">
+  <view class="box-border min-h-screen w-screen flex flex-col items-center justify-center bg-page">
     <uh-navbar default-title="绑定微信" :need-placeholder="false" />
     <view
-      class="pointer-events-none fixed left-0 top-0 z-0 h-[46vh] w-full from-[#d9f77f] via-[#e8fbaf] to-[#f5fae8] bg-gradient-to-b"
+      class="pointer-events-none fixed left-0 top-0 z-0 h-[46vh] w-full uh-auth-wash"
     />
 
     <view class="relative z-10 box-border w-full flex flex-1 flex-col items-center justify-center px-6 pt-12">
@@ -230,7 +230,7 @@ function handleDone() {
           </view>
           <uh-button
             class="w-full flex-1"
-            custom-class="uh-global-card-glass uh-shadow-xs mt-8 box-border w-full border !rounded-full !bg-white !py-2 !text-gray-900 !text-sm"
+            custom-class="uh-global-card-glass uh-shadow-xs mt-8 box-border w-full border !rounded-full uh-float-surface !py-2 !text-gray-900 !text-sm"
             @click="handleDone"
           >
             关闭页面

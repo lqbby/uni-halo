@@ -44,7 +44,7 @@ const h5Maps = buildH5Maps()
 export default defineManifestConfig({
   'name': VITE_APP_TITLE,
   'appid': VITE_UNI_APPID,
-  'description': 'UniHalo v3.x，你的跨端Halo博客。',
+  'description': 'LQBBY 的个人博客小程序，同步博客文章与动态。',
   'versionName': '3.0.0',
   'versionCode': '300',
   'transformPx': false,
@@ -143,6 +143,9 @@ export default defineManifestConfig({
   /* 小程序特有相关 */
   'mp-weixin': {
     appid: VITE_WX_APPID,
+    // 深色模式:跟随系统外观(theme.json 提供原生层双套色值,页面层走 WXSS prefers-color-scheme + CSS 变量)
+    darkmode: true,
+    themeLocation: 'theme.json',
     setting: {
       urlCheck: false,
       // 是否启用 ES6 转 ES5

@@ -111,7 +111,7 @@ onMounted(handleGetCategoryList)
         <!-- 无图 -->
         <view
           v-else
-          class="h-full w-full flex items-center justify-center from-[#ebfabf] to-[#f5fae8] bg-gradient-to-b text-gray-400"
+          class="h-full w-full flex items-center justify-center bg-secondary text-gray-400"
         >
           <wd-icon class-prefix="uhemoji-icon" name="-injury" size="72rpx" />
         </view>

@@ -161,8 +161,8 @@ onPageScroll((option: Page.PageScrollOption) => {
         </wd-img>
         <!-- 无图 -->
         <view v-else
-          class="h-18 w-full flex items-center justify-center from-[#ebfabf] to-[#f5fae8] bg-gradient-to-b text-gray-400">
-          <wd-icon class-prefix="uhemoji-icon" name="-injury" size="48rpx" />
+          class="h-18 w-full flex items-center justify-center uh-img-placeholder text-gray-400">
+          <image src="/static/mascot/dafeiyu-empty.png" mode="aspectFit" class="h-[48rpx] w-[48rpx] rounded-[10rpx]" />
         </view>
         <text class="truncate text-xs font-normal">{{ bloggerInfo.nickname }}</text>
       </view>

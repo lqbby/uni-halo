@@ -150,7 +150,7 @@ function handleOnUser() {
     <view class="flex shrink-0" @click="handleOnUser()">
       <wd-avatar
         :src="avatar" :text="avatarText" :shape="settings.avatarShape === 'circle' ? 'round' : 'square'"
-        custom-class="uh-global-card-glass uh-shadow-xs !bg-[#bbe52a6b] !h-10 !w-10 !text-sm !font-bold !text-gray-900"
+        custom-class="uh-global-card-glass uh-shadow-xs !bg-[#53a3f23d] !h-10 !w-10 !text-sm !font-bold !text-gray-900"
         :class="avatarClass" mode="aspectFill"
       />
     </view>

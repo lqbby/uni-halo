@@ -298,10 +298,11 @@ onBeforeUnmount(() => {
   position: fixed;
   max-height: 100%;
   overflow-y: auto;
-  background-color: rgb(255 255 255 / 85%);
-  border: 4rpx solid rgb(255 255 255 / 90%);
+  /* 复验轮 #8/#9:玻璃底/边/高光走 --eth-glass-* 双套变量(原写死白玻璃,深色下外壳浅、内卡深、标题看不见) */
+  background-color: var(--eth-glass-bg);
+  border: 4rpx solid var(--eth-glass-border);
   box-shadow:
-    inset 0 1rpx 0 rgb(255 255 255 / 75%),
+    inset 0 1rpx 0 var(--eth-glass-highlight),
     0 8rpx 32rpx rgb(90 105 200 / 14%);
   backdrop-filter: blur(24rpx) saturate(160%);
   -webkit-backdrop-filter: blur(24rpx) saturate(160%);
@@ -310,7 +311,7 @@ onBeforeUnmount(() => {
 
   /* 低端 WebView 不支持 backdrop-filter 的兜底:提高不透明度保证可读性 */
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    background-color: rgb(255 255 255 / 88%);
+    background-color: var(--eth-glass-bg-solid);
   }
 }
 
@@ -440,6 +441,6 @@ onBeforeUnmount(() => {
 .uh-glass-popup__close-icon {
   font-size: 48rpx;
   line-height: 1;
-  color: rgb(0 0 0 / 45%);
+  color: var(--eth-text-secondary);
 }
 </style>

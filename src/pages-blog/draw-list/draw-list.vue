@@ -63,7 +63,7 @@ async function handleGoDraw() {
 }
 
 const siteName = computed(() =>
-  haloConfigs.value?.featureConfig?.profile?.appInfo?.name || 'uni-halo')
+  haloConfigs.value?.featureConfig?.profile?.appInfo?.name || 'LQBBY')
 
 /** 依赖插件(uni-halo)，不可用时展示占位并可重试 */
 const { pluginId, checking, tips, available: uniHaloPluginAvailable, check: checkPluginAvailable } = usePluginAvailable({

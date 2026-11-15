@@ -129,7 +129,7 @@ function handleToSettingPage() {
     <view class="box-border w-full flex flex-col gap-y-3 p-3">
       <!-- 顶部 -->
       <view class="flex items-center justify-between">
-        <text class="text-md font-bold">偏好设置</text>
+        <text class="text-md text-gray-900 font-bold">偏好设置</text>
         <view
           class="uh-global-card-glass box-border h-6 w-6 flex items-center justify-center border rounded-lg text-gray-500 shadow-none !bg-white/5"
           @click="handleClose()"
@@ -270,13 +270,13 @@ function handleToSettingPage() {
       <!-- 底部固定操作区域 -->
       <view class="box-border w-full flex items-center gap-x-2">
         <uh-button
-          class="flex-1" custom-class="flex-1 uh-global-card-glass uh-shadow-xs border !py-2.5 !rounded-xl !text-3xs !bg-white/90"
+          class="flex-1" custom-class="flex-1 uh-global-card-glass uh-shadow-xs border !py-2.5 !rounded-xl !text-3xs uh-float-surface"
           @click="handleResetAll"
         >
           恢复默认
         </uh-button>
         <uh-button
-          class="flex-1" custom-class="flex-1 uh-global-card-glass uh-shadow-xs !bg-white/90 border !py-2.5 !rounded-xl !text-3xs"
+          class="flex-1" custom-class="flex-1 uh-global-card-glass uh-shadow-xs uh-float-surface border !py-2.5 !rounded-xl !text-3xs"
           @click="handleToSettingPage()"
         >
           去设置页

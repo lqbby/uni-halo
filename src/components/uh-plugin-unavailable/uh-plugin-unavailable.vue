@@ -32,7 +32,9 @@ function handleRefresh() {
     class="mx-auto my-auto box-border max-w-3/5 flex flex-col items-center justify-center gap-6 text-sm"
     :class="props.customClass"
   >
-    <wd-icon class-prefix="uhemoji-icon" name="-cry" size="140rpx" />
+    <!-- 复验轮 #11:默认哭脸 emoji 插图换 Q 版大肥鱼;第七轮 #19 改判:整页不可用态同属状态呈现,
+         换 #17 羽化透明头 bare(不套圆角贴纸,头靠 alpha 羽化直接融进页面底) -->
+    <image src="/static/mascot/dafeiyu-head.png" mode="aspectFit" class="h-[220rpx] w-[220rpx]" />
 
     <view class="box-border text-sm text-gray-900 font-bold">
       {{ pluginInfo.name }}

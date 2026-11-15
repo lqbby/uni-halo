@@ -7,20 +7,33 @@
 
 :root,
 page {
+  /* ============================================================
+   * 换肤一期(2026-11-15):品牌色由黄绿换为 Ethereal 博客主题蓝
+   * 色值取自主题 src/styles/variables.css(--hue 250)浅色套,
+   * oklch→hex 换算与文章正文第四轮取值表一致。
+   * 深色套在文末 @media (prefers-color-scheme: dark) 内覆盖。
+   * ============================================================ */
+
   // 修改按主题色
   // 注:该变量由本项目 UnoCSS 消费(uno.config theme.primary),@wot-ui/ui 2.x 不再内置此变量
-  --wot-color-theme: #b9e424;
+  --wot-color-theme: #53a3f2;
+
+  // UnoCSS secondary(标签胶囊底/选中态浅底等)
+  --wot-color-secondary: #c6e1ff;
+
+  // UnoCSS page(页面底色 bg-page;此前未定义一直吃 uno 兜底常量,换肤一期补齐双套)
+  --wot-color-page: #eaeff5;
 
   // @wot-ui/ui 2.x 主题色阶(1.x 的 --wot-color-theme / --wot-button-primary-bg-color 已更名,原写法不再生效)
   // 6=主色(按钮默认背景/文字) 7=active 深一档 1/2=plain/soft 浅底
-  --wot-primary-6: #b9e424;
-  --wot-primary-7: #a7cd20;
-  --wot-primary-1: #f4fbe0;
-  --wot-primary-2: #ebfabf;
+  --wot-primary-6: #53a3f2;
+  --wot-primary-7: #3275b4;
+  --wot-primary-1: #e2f0ff;
+  --wot-primary-2: #c6e1ff;
 
   // 修改按钮背景色(2.x 变量名,1.x 为 --wot-button-primary-bg-color)
-  --wot-button-primary-bg: #b9e424;
-  --wot-button-primary-bg-active: #a7cd20;
+  --wot-button-primary-bg: #53a3f2;
+  --wot-button-primary-bg-active: #3275b4;
 
   // wd-img 加载态/失败态背景改为半透明浅色,避免在玻璃拟态卡片/深色封面上出现整块灰底
   --wot-img-loading-bg: rgba(0, 0, 0, 0.03);
@@ -32,44 +45,165 @@ page {
   --wot-avatar-bg: white;
   --wot-avatar-font-weight: normal;
   --wot-avatar-font-size: 24rpx;
-  --wot-avatar-color: #b9e424;
+  --wot-avatar-color: #53a3f2;
+
+  /* ---- Ethereal 语义变量(浅色套) ---- */
+  --eth-primary: #53a3f2; // --primary oklch(.70 .14 250)
+  --eth-page-bg: #eaeff5; // --page-bg oklch(.95 .01 250)
+  --eth-card-bg: #ffffff; // --card-bg
+  --eth-float-bg: #ffffff; // 浮层(弹层/菜单)
+  --eth-text: #1a222b; // --deep-text oklch(.25 .02 250)
+  --eth-text-strong: #1a222b;
+  --eth-text-secondary: #4d5660; // oklch(.45 .02 250)
+  --eth-line: rgba(0, 0, 0, 0.1); // --line-color
+  --eth-divider: rgba(0, 0, 0, 0.08);
+  --eth-btn-bg: #e2f0ff; // --btn-regular-bg oklch(.95 .025 250)
+  --eth-btn-text: #3275b4; // --btn-content oklch(.55 .12 250)
+  --eth-danger: #de3b3d; // 语义错误/危险色(第四轮取值,退出登录等破坏性操作)
+  --eth-tab-inactive: #303133;
+  --eth-tabbar-bg: rgba(255, 255, 255, 0.85);
+  /* 玻璃浮层(uh-glass-popup / uh-glass-picker 面板;复验轮 #8/#9:原写死白玻璃,深色下外浅内深) */
+  --eth-glass-bg: rgb(255 255 255 / 85%);
+  --eth-glass-bg-solid: rgb(255 255 255 / 88%);
+  --eth-glass-border: rgb(255 255 255 / 90%);
+  --eth-glass-highlight: rgb(255 255 255 / 75%);
+  --eth-glass-fade: rgb(255 255 255 / 70%);
+  --eth-shadow: 0 4rpx 20rpx rgba(26, 34, 43, 0.06);
+  --eth-shadow-primary: 0 8rpx 28rpx rgba(83, 163, 242, 0.16);
+  --eth-shadow-primary-xs: 0 4rpx 16rpx rgba(83, 163, 242, 0.14);
+}
+
+page {
+  background-color: var(--eth-page-bg);
+  color: var(--eth-text);
 }
 
 .uh-global-page {
 }
 
+/*
+ * 换肤一期:全站共享卡面由「玻璃拟态」改为 Ethereal 扁平卡
+ * (卡面实底 + 线条描边 + 极轻阴影,明暗双套由 --eth-* 变量驱动)。
+ * 类名保留(.uh-global-card-glass 是全站单点),只换实现。
+ */
 .uh-global-card-glass {
   box-sizing: border-box;
-  background-color: rgb(255 255 255 / 55%);
-  border: 4rpx solid rgb(255 255 255 / 65%);
-  box-shadow:
-    inset 0 1rpx 0 rgb(255 255 255 / 75%),
-    0 8rpx 32rpx rgb(90 105 200 / 14%);
-  backdrop-filter: blur(24rpx) saturate(160%);
-  -webkit-backdrop-filter: blur(24rpx) saturate(160%);
-
-  /* 低端安卓 WebView 不支持 backdrop-filter 的兜底:提高不透明度保证可读性 */
-  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    background-color: rgb(255 255 255 / 88%);
-  }
+  background-color: var(--eth-card-bg);
+  border: 2rpx solid var(--eth-line);
+  box-shadow: var(--eth-shadow);
 }
 
 .uh-shadow-xs {
-  box-shadow:
-    inset 0 1rpx 0 rgb(255 255 255 / 75%),
-    0 8rpx 32rpx rgb(90 105 200 / 7%);
+  box-shadow: var(--eth-shadow);
 }
 
 .uh-shadow-sm {
-  box-shadow: 0 0 24rpx rgba(0, 0, 0, 0.1);
+  box-shadow: var(--eth-shadow);
 }
 
 .uh-shadow-primary {
-  box-shadow: 0 8rpx 28rpx rgba(143, 188, 18, 0.08);
+  box-shadow: var(--eth-shadow-primary);
 }
 
 .uh-shadow-primary-xs {
-  box-shadow: 0 4rpx 16rpx rgba(143, 188, 18, 0.08);
+  box-shadow: var(--eth-shadow-primary-xs);
+}
+
+/* 博客式胶囊标签(分类/标签):regular 按钮底 + btn-content 字,双套随变量 */
+.uh-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4rpx 16rpx;
+  border-radius: 999rpx;
+  background-color: var(--eth-btn-bg);
+  color: var(--eth-btn-text);
+  font-size: 22rpx;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+/* 系统衬线字体栈(首页头图站名/标语用,Q6=B 不嵌字体) */
+.uh-serif {
+  font-family: ui-serif, Georgia, Cambria, 'Songti SC', 'STSong', 'Noto Serif SC', SimSun, serif;
+}
+
+/* 无图占位底:主题 regular 按钮底(双套随变量),替代旧黄绿渐变占位(修复轮) */
+.uh-img-placeholder {
+  background-color: var(--eth-btn-bg);
+  color: var(--eth-text-secondary);
+}
+
+/* 装饰光晕底:次级色(双套随变量) */
+.uh-deco-blob {
+  background-color: var(--wot-color-secondary);
+}
+
+/* logo 圆环渐变:次级色 → 主色(双套随变量) */
+.uh-logo-ring {
+  background-image: linear-gradient(135deg, var(--wot-color-secondary), var(--wot-color-theme));
+}
+
+/* 柔和底块:primary-1(双套随变量) */
+.uh-soft-bg {
+  background-color: var(--wot-primary-1);
+}
+
+/* 登录/注册页顶部色洗:次级色渐隐到透明(双套随变量),替代旧黄绿渐变 */
+.uh-auth-wash {
+  background-image: linear-gradient(to bottom, var(--wot-color-secondary), transparent);
+}
+
+/* 主题描边色(双套随变量) */
+.uh-line-border {
+  border-color: var(--eth-line);
+}
+
+/* 浮层内表面(弹层/抽屉里的按钮与卡片:原 !bg-white/90 写死白,复验轮 #8/#9 改走浮层底+正文字,双套随变量) */
+.uh-float-surface {
+  background-color: var(--eth-float-bg);
+  color: var(--eth-text);
+}
+
+/* 危险操作文字(退出登录等:双套随变量) */
+.uh-danger-text {
+  color: var(--eth-danger);
+}
+
+/*
+ * 个人中心抽屉专用面板(第三轮 #12):不用共享玻璃面,改 Ethereal 侧栏语言——
+ * page 底实面 + 无玻璃描边/模糊,内部全是主题扁平卡,与博客侧边栏同一套观感。
+ * 仅 uh-user-popup 经 custom-class 点名使用,不影响其余 20 个玻璃浮层。
+ */
+.uh-glass-popup-panel.uh-drawer-panel {
+  background-color: var(--eth-page-bg);
+  border: none;
+  box-shadow: 0 8rpx 32rpx rgb(90 105 200 / 14%);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* 博主页头部背景(复验轮 #10:插件演示背景图不再渲染时的主题渐变,双套随变量) */
+.uh-blogger-hero-bg {
+  background-image: linear-gradient(165deg, var(--wot-primary-2) 0%, var(--eth-btn-bg) 46%, var(--eth-page-bg) 100%);
+}
+
+/* tabBar 选中项胶囊:regular 按钮底色(双套随变量) */
+.uh-tabbar-active {
+  background-color: var(--eth-btn-bg);
+  border-radius: 999rpx;
+}
+
+/* 自定义 tabBar 悬浮条底(磨砂保留:压在内容之上的浮层,与博客 Banner 按钮同语言) */
+.uh-tabbar-bar {
+  border: 2rpx solid var(--eth-line);
+  box-shadow: var(--eth-shadow);
+  background-color: var(--eth-tabbar-bg);
+  backdrop-filter: blur(24rpx) saturate(160%);
+  -webkit-backdrop-filter: blur(24rpx) saturate(160%);
+
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    background-color: var(--eth-card-bg);
+  }
 }
 .uh-shadow-love-xs {
   box-shadow: 0 4rpx 16rpx rgba(248, 56, 86, 0.08);
@@ -126,3 +260,95 @@ border-t-1
 //   border-style: solid; /* 2 */
 //   border-color: var(--un-default-border-color, #e5e7eb); /* 3 */
 // }
+
+/* ============================================================
+ * 换肤一期:深色套(跟随系统,manifest darkmode 开启后 WXSS 支持该媒体查询)
+ * 色值取自主题 variables.css 的 :root.dark 段(oklch→hex 与浅色同法换算)。
+ * 变量覆盖管「走变量的样式」;下半段灰阶重映射管存量写死的
+ * text-gray / bg-white / bg-gray 系原子类(次级页只吃全局层即靠这一段),
+ * 用 page 前缀提高特异性,压过 UnoCSS 生成的同名工具类。
+ * ============================================================ */
+@media (prefers-color-scheme: dark) {
+  :root,
+  page {
+    --wot-color-theme: #63b3ff;
+    --wot-color-secondary: #324457;
+    --wot-color-page: #090e13;
+    --wot-primary-6: #63b3ff;
+    --wot-primary-7: #7cb3eb;
+    --wot-primary-1: #283747;
+    --wot-primary-2: #324457;
+    --wot-button-primary-bg: #63b3ff;
+    --wot-button-primary-bg-active: #7cb3eb;
+
+    --wot-img-loading-bg: rgba(255, 255, 255, 0.06);
+    --wot-img-loading-icon-color: rgba(255, 255, 255, 0.28);
+    --wot-img-error-bg: rgba(255, 255, 255, 0.06);
+    --wot-img-error-icon-color: rgba(255, 255, 255, 0.28);
+
+    --wot-avatar-bg: #283747;
+    --wot-avatar-color: #63b3ff;
+
+    /* ---- Ethereal 语义变量(深色套) ---- */
+    --eth-primary: #63b3ff; // --primary oklch(.75 .14 250)
+    --eth-page-bg: #090e13; // --page-bg oklch(.16 .014 250)
+    --eth-card-bg: #181e24; // --card-bg oklch(.23 .015 250)
+    --eth-float-bg: #0f141a; // --float-panel-bg oklch(.19 .015 250)
+    --eth-text: #c4cfdb; // --deep-text oklch(.85 .02 250)
+    --eth-text-strong: #e2e9f0; // oklch(.93 .012 250)
+    --eth-text-secondary: #95a0ab;
+    --eth-line: rgba(255, 255, 255, 0.1);
+    --eth-divider: rgba(255, 255, 255, 0.08);
+    --eth-btn-bg: #283747; // --btn-regular-bg oklch(.33 .035 250)
+    --eth-btn-text: #7cb3eb; // --btn-content oklch(.75 .10 250)
+    --eth-danger: #f06666; // 深色下提亮保证在深卡面上的可读性
+    --eth-tab-inactive: #8fa1b5;
+    --eth-tabbar-bg: rgba(15, 20, 26, 0.88);
+    /* 玻璃浮层深色套:float-bg #0f141a 的玻璃化(面板仍带 backdrop blur,底色随外观翻深) */
+    --eth-glass-bg: rgb(15 20 26 / 85%);
+    --eth-glass-bg-solid: rgb(15 20 26 / 92%);
+    --eth-glass-border: rgb(255 255 255 / 14%);
+    --eth-glass-highlight: rgb(255 255 255 / 8%);
+    --eth-glass-fade: rgb(15 20 26 / 70%);
+    --eth-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.4);
+    --eth-shadow-primary: 0 8rpx 28rpx rgba(99, 179, 255, 0.18);
+    --eth-shadow-primary-xs: 0 4rpx 16rpx rgba(99, 179, 255, 0.16);
+  }
+
+  /* ---- 存量写死灰阶全局重映射(暗色) ---- */
+  page .text-gray-900 {
+    color: #e2e9f0;
+  }
+  page .text-gray-800 {
+    color: #c4cfdb;
+  }
+  page .text-gray-700 {
+    color: #afb9c3;
+  }
+  page .text-gray-600 {
+    color: #95a0ab;
+  }
+  page .text-gray-500 {
+    color: #86909b;
+  }
+  page .text-gray-400 {
+    color: #69737d;
+  }
+  page .bg-white {
+    background-color: #181e24;
+  }
+  page .bg-gray-50 {
+    background-color: #1d2732;
+  }
+  page .bg-gray-100 {
+    background-color: #283747;
+  }
+  /* 注:类名含 / 的选择器在 SCSS 里手写转义会被双重转义(产物出现 \\/ ,微信 WXSS 校验不过),故用属性选择器 */
+  page [class~='border-black/5'] {
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+  page [class~='border-black/10'] {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  /* divide-gray-100 的暗色分隔线未做重映射:其选择器需 :not() 而 WXSS 不支持,留二期逐页处理 */
+}

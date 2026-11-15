@@ -28,7 +28,7 @@ const pageTitle = usePageTitle('equipment', '装备展示')
 const appConfigStore = useAppConfigStore()
 const { configs: haloConfigs } = storeToRefs(appConfigStore)
 
-const siteName = computed(() => haloConfigs.value.featureConfig?.profile?.appInfo?.name || 'uni-halo')
+const siteName = computed(() => haloConfigs.value.featureConfig?.profile?.appInfo?.name || 'LQBBY')
 
 /** 依赖插件(equipment) */
 const { pluginId, checking, tips, available: pluginAvailable, check: checkPluginAvailable } = usePluginAvailable({

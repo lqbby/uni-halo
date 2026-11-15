@@ -173,9 +173,9 @@ onLoad((options) => {
       <!-- 无图 -->
       <view
         v-else
-        class="mb-5 h-40 w-full flex items-center justify-center from-[#ebfabf] to-[#f5fae8] bg-gradient-to-b text-gray-400"
+        class="mb-5 h-40 w-full flex items-center justify-center uh-img-placeholder text-gray-400"
       >
-        <wd-icon class-prefix="uhemoji-icon" name="-injury" size="72rpx" />
+        <image src="/static/mascot/dafeiyu-empty.png" mode="aspectFit" class="h-[72rpx] w-[72rpx] rounded-[14rpx]" />
       </view>
       <view class="text-md text-gray-900 font-bold leading-snug">
         {{ title }}

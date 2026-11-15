@@ -20,6 +20,7 @@ export * from './appConfig'
 export * from './favorites'
 export * from './halo'
 export * from './setting'
+export * from './theme'
 // 模块统一导出
 export * from './token'
 export * from './user'

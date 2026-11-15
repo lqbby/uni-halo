@@ -57,10 +57,10 @@ const statistics = ref<IDataStatistics>({
 })
 
 /* ---------------- 图表配置 ---------------- */
-/** 主题色(与 style/index.scss 的 --wot-color-theme 保持一致) */
-const themeColor = '#b9e424'
-/** 图表系列色板:以主题色为基调配色,黄→绿→青相邻色系,避免杂乱 */
-const chartColors = [themeColor, '#8bc34a', '#4caf50', '#26a69a', '#ffd54f', '#d4e157', '#66bb6a', '#9ccc65', '#00bcd4', '#ffb300']
+/** 主题色(与 style/index.scss 的 --wot-color-theme 浅色套保持一致) */
+const themeColor = '#53A3F2'
+/** 图表系列色板(修复轮:改 Ethereal 蓝基调 + 正文提示色系点缀,替代旧黄绿色板) */
+const chartColors = [themeColor, '#3275B4', '#7CB3EB', '#00A166', '#7F76DC', '#DD8736', '#63B3FF', '#4284C5', '#B984DF', '#95A0AB']
 
 /** 标签统计(环形图) */
 const tagChart = ref({

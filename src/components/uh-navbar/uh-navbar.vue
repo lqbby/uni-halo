@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import { tabbarList } from '@/tabbar/config'
+import { useThemeStore } from '@/store/theme'
 
 defineOptions({
   options: {
@@ -35,12 +37,15 @@ interface IProps {
 const windowInfo = uni.getWindowInfo()
 const statusBarHeight = computed(() => windowInfo.statusBarHeight)
 
+const { isDark } = storeToRefs(useThemeStore())
+
 const customStyle = computed(() => {
   const alpha = Math.min(props.scrollY / 360, props.maxAlpha)
   return {
     paddingTop: `${statusBarHeight.value}px`,
     backdropFilter: `blur(${props.bgBlur}rpx)`,
-    backgroundColor: `rgba(255, 255, 255, ${alpha})`,
+    // 底色基底随外观:浅色白、深色用浮层底 #0F141A(与 theme.json navBgColor 同值)
+    backgroundColor: isDark.value ? `rgba(15, 20, 26, ${alpha})` : `rgba(255, 255, 255, ${alpha})`,
   }
 })
 const scrollThreshold = computed(() => {

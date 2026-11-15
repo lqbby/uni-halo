@@ -10,6 +10,7 @@ import { useLoveModuleUnlock } from '@/hooks/useLoveModuleUnlock'
 import { checkUpdates } from '@/utils/checkUpdate'
 import { checkAvatarUrl, checkImageUrl } from '@/utils/url'
 import { getAvatarFallbackText } from '@/utils/avatar'
+import { sanitizeBrandingText } from '@/utils/branding'
 import { t } from '@/locale'
 import { usePageScroll } from '@/hooks/usePageScroll'
 import { usePageTitle } from '@/hooks/usePageTitle'
@@ -60,7 +61,26 @@ const pageConfig = computed(() => haloConfigs.value.featureConfig?.pages?.blogge
   | { bgImageUrl?: string, waveImageUrl?: string, commonFeaturesMode?: 'grid' | 'list' }
   | undefined)
 
-const calcWaveUrl = computed(() => checkImageUrl(pageConfig.value?.waveImageUrl))
+/**
+ * 插件自带演示素材判定(复验轮 #10):插件 assets/static 下是上游演示图
+ * (uni_halo_profile_bg.jpeg 黄绿背景 / uni_halo_about_wave.gif),
+ * 哥哥未在插件后台换成自己的图之前按「未配置」处理,不渲染演示图。
+ */
+function isPluginDemoAsset(url?: string): boolean {
+  return !!url && url.includes('/plugins/uni-halo/assets/')
+}
+
+/** 头部背景图:演示素材视为未配置(回退主题渐变),哥哥在插件后台换成自己的图后自动生效 */
+const calcBgImageUrl = computed(() => {
+  const url = pageConfig.value?.bgImageUrl
+  return url && !isPluginDemoAsset(url) ? checkImageUrl(url) : ''
+})
+
+/** 波浪图:同上,演示素材不渲染 */
+const calcWaveImageUrl = computed(() => {
+  const url = pageConfig.value?.waveImageUrl
+  return url && !isPluginDemoAsset(url) ? checkImageUrl(url) : ''
+})
 
 /* ---------------- 分享 ---------------- */
 
@@ -156,7 +176,11 @@ const appVersionItem: INavItem = {
   group: 'more',
 }
 
-/** 解析条目当前生效的图标风格（iconMode 优先，缺省取 icons[0]） */
+/**
+ * 解析条目当前生效的图标风格（iconMode 优先，缺省取 icons[0]）
+ * 呈现归口（换肤第八轮 #20 ①组，与首页快捷导航对齐）：图标走配置（服务端已统一切 ri 线性套），
+ * 颜色由代码统一主题主色——条目的逐项 bgColor/color 不再消费（后台表达不了全员统一主题色）。
+ */
 function resolveNavItemIcon(item: INavItem): INavIconStyle | null {
   if (!item.icons?.length) {
     return null
@@ -215,7 +239,8 @@ async function handleGetNavList() {
         bgColor: e.bgColor || '#969696F2',
         color: e.color,
         iconColor: e.iconColor,
-        subTitle: e.subTitle || '',
+        /* 复验轮 #14:副标题是插件端下发文案,演示值含上游作者名(「小莫唐尼的开源项目」)时按未配置处理、不显示 */
+        subTitle: sanitizeBrandingText(e.subTitle),
         path: e.path || null,
         show: e.visible !== false,
         group,
@@ -316,64 +341,61 @@ onPageScroll((option: Page.PageScrollOption) => {
   <view class="box-border min-h-screen w-screen bg-page pb-2">
     <uh-mine-navbar :scroll-y="scrollY" :default-title="pageTitle" />
 
-    <!-- 头部:博主信息(背景图 + 遮罩 + wave,内容区做状态栏适配) -->
-    <view class="relative h-96 w-full">
+    <!-- 头部背景(背景图 + 遮罩 + wave;博主信息移入下方身份卡。无自配背景图时走主题双套渐变,复验轮 #10) -->
+    <view class="relative h-80 w-full" :class="calcBgImageUrl ? '' : 'uh-blogger-hero-bg'">
       <image
-        v-if="pageConfig?.bgImageUrl"
-        :src="checkImageUrl(pageConfig?.bgImageUrl)"
+        v-if="calcBgImageUrl"
+        :src="calcBgImageUrl"
         class="absolute left-0 top-0 z-0 h-full w-full"
         mode="aspectFill"
         lazy-load
       />
 
-      <view class="relative z-6 h-full flex flex-col items-center justify-center">
-        <wd-avatar
-          :src="bloggerInfo.avatar"
-          :text="getAvatarFallbackText(bloggerInfo.nickname)"
-          shape="round"
-          custom-class="uh-global-card-glass !h-22 !w-22 !font-bold !text-2xl"
-          class="!border-3 !rounded-full"
-          mode="aspectFill"
-        />
-        <view class="mt-4 text-lg text-white font-bold text-shadow-[0_2rpx_8rpx_rgba(0,0,0,0.4)]">
-          {{ bloggerInfo.nickname }}
-        </view>
-        <view
-          class="desc mt-2 px-10 text-center text-2xs text-white/90 leading-5 text-shadow-[0_2rpx_8rpx_rgba(0,0,0,0.4)]"
-        >
-          {{ bloggerInfo.description || '这个博主很懒，竟然没写介绍~' }}
-        </view>
-      </view>
-
       <!-- 遮罩 -->
       <view class="absolute left-0 top-0 z-1 h-full w-full bg-white/5" style="backdrop-filter:blur(4rpx)" />
       <image
-        v-if="calcWaveUrl" :src="calcWaveUrl" mode="scaleToFill"
+        v-if="calcWaveImageUrl" :src="calcWaveImageUrl" mode="scaleToFill"
         class="gif-wave absolute bottom-0 left-0 z-10 h-18 w-full" style="mix-blend-mode: screen;"
       />
       <!-- 过渡 -->
       <view class="absolute bottom-0 left-0 z-10 h-18 w-full from-black/0 to-page bg-gradient-to-b" />
     </view>
 
-    <!-- 站点统计 -->
-    <view
-      v-if="featureMode === 'list'"
-      class="uh-global-card-glass uh-shadow-xs relative z-10 mx-4 flex border rounded-2xl -mt-16"
-    >
-      <view v-for="item in allStats" :key="item.key" class="flex-1 py-4 text-center">
-        <wd-count-to
-          :key="`${item.key}-${item.value}`" :start-val="0" :end-val="item.value" :duration="900"
-          separator="" color="#111827" custom-class="text-lg font-bold"
+    <!-- 博主身份卡(换肤一期 Q8=C:仿博客关于页身份卡;数据走现有 bloggerInfo + 站点统计,两种功能模式都显示) -->
+    <view class="uh-global-card-glass uh-shadow-xs relative z-20 mx-4 rounded-3xl p-5 -mt-24">
+      <view class="flex items-center gap-4">
+        <wd-avatar
+          :src="bloggerInfo.avatar"
+          :text="getAvatarFallbackText(bloggerInfo.nickname)"
+          shape="round"
+          custom-class="!h-16 !w-16 !font-bold !text-xl"
+          mode="aspectFill"
         />
-        <view class="mt-1 text-xs text-gray-500">
-          {{ item.label }}
+        <view class="min-w-0 flex-1">
+          <view class="truncate text-lg text-gray-900 font-bold">
+            {{ bloggerInfo.nickname }}
+          </view>
+          <view class="mt-1 line-clamp-2 text-xs text-gray-500 leading-5">
+            {{ bloggerInfo.description || '这个博主很懒，竟然没写介绍~' }}
+          </view>
+        </view>
+      </view>
+      <view class="my-4 border-t border-black/5 border-t-solid" />
+      <view class="flex">
+        <view v-for="item in allStats" :key="item.key" class="flex-1 text-center">
+          <view class="text-lg text-gray-900 font-bold">
+            {{ item.value }}
+          </view>
+          <view class="mt-0.5 text-xs text-gray-500">
+            {{ item.label }}
+          </view>
         </view>
       </view>
     </view>
 
     <!-- 功能导航：非分组模式 -->
     <template v-if="featureMode === 'grid'">
-      <view v-if="commonFeatures.length !== 0" class="relative z-10 box-border overflow-hidden p-4 -mt-20">
+      <view v-if="commonFeatures.length !== 0" class="relative z-10 box-border overflow-hidden p-4">
         <view class="uh-global-card-glass uh-shadow-xs grid grid-cols-5 box-border gap-3.5 border rounded-3xl p-4">
           <view
             v-for="(nav) in commonFeatures" :key="nav.key"
@@ -382,11 +404,10 @@ onPageScroll((option: Page.PageScrollOption) => {
           >
             <view
               class="uh-global-card-glass uh-shadow-xs h-12 w-12 flex items-center justify-center border rounded-2xl"
-              :style="{ backgroundColor: nav.bgColor, color: nav.iconColor || nav.color }"
             >
-              <wd-icon :class-prefix="resolveNavItemIcon(nav)?.prefix" :name="resolveNavItemIcon(nav)?.iconName" size="52rpx" />
+              <wd-icon :class-prefix="resolveNavItemIcon(nav)?.prefix" :name="resolveNavItemIcon(nav)?.iconName" size="52rpx" color="var(--eth-primary)" />
             </view>
-            <text class="mt-1 w-full truncate text-center text-xs text-gray-900" :style="{ color: nav.color }">
+            <text class="mt-1 w-full truncate text-center text-xs text-gray-900">
               {{ nav.title }}
             </text>
           </view>
@@ -407,12 +428,11 @@ onPageScroll((option: Page.PageScrollOption) => {
           >
             <view class="nav-left flex items-center gap-3 py-2.5">
               <view
-                class="uh-global-card-glass uh-shadow-xs h-8 w-8 flex items-center justify-center border rounded-xl text-gray-600"
-                :style="{ backgroundColor: nav.bgColor, color: nav.iconColor || nav.color }"
+                class="uh-global-card-glass uh-shadow-xs h-8 w-8 flex items-center justify-center border rounded-xl"
               >
-                <wd-icon :class-prefix="resolveNavItemIcon(nav)?.prefix" :name="resolveNavItemIcon(nav)?.iconName" size="36rpx" />
+                <wd-icon :class-prefix="resolveNavItemIcon(nav)?.prefix" :name="resolveNavItemIcon(nav)?.iconName" size="36rpx" color="var(--eth-primary)" />
               </view>
-              <text class="nav-title text-sm text-gray-900" :style="{ color: nav.color }">
+              <text class="nav-title text-sm text-gray-900">
                 {{ nav.title }}
               </text>
             </view>
@@ -443,11 +463,10 @@ onPageScroll((option: Page.PageScrollOption) => {
             <view class="nav-left flex items-center gap-3 py-2.5">
               <view
                 class="uh-global-card-glass uh-shadow-xs h-8 w-8 flex items-center justify-center border rounded-xl"
-                :style="{ backgroundColor: nav.bgColor, color: nav.iconColor || nav.color }"
               >
-                <wd-icon :class-prefix="resolveNavItemIcon(nav)?.prefix" :name="resolveNavItemIcon(nav)?.iconName" size="36rpx" />
+                <wd-icon :class-prefix="resolveNavItemIcon(nav)?.prefix" :name="resolveNavItemIcon(nav)?.iconName" size="36rpx" color="var(--eth-primary)" />
               </view>
-              <text class="nav-title text-sm text-gray-900" :style="{ color: nav.color }">
+              <text class="nav-title text-sm text-gray-900">
                 {{ nav.title }}
               </text>
             </view>

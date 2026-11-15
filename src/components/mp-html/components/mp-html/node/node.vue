@@ -3,7 +3,7 @@
     <block v-for="(n, i) in nodes" v-bind:key="i">
       <!-- 图片 -->
       <!-- 占位图 -->
-      <image v-if="n.name==='img'&&!n.t&&((opts[1]&&!ctrl[i])||ctrl[i]<0)" class="_img" :style="n.attrs.style" :src="ctrl[i]<0?opts[2]:opts[1]" mode="widthFix" />
+      <image v-if="n.name==='img'&&!n.t&&((opts[1]&&!ctrl[i])||ctrl[i]<0)" class="_img" :style="phStyle(n.attrs.style)" :src="ctrl[i]<0?opts[2]:opts[1]" mode="aspectFit" />
       <!-- 显示图片 -->
       <!-- #ifdef H5 || (APP-PLUS && VUE2) -->
       <img v-if="n.name==='img'" :id="n.attrs.id" :class="'_img '+n.attrs.class" :style="(ctrl['e'+i]&&opts[5]!=='simple'?'border:1px dashed black;padding:3px;':'')+(ctrl[i]===-1?'display:none;':'')+n.attrs.style" :src="n.attrs.src||(ctrl.load?n.attrs['data-src']:'')" :data-i="i" @load="imgLoad" @error="mediaError" @tap.stop="imgTap" @longpress="imgLongTap" />
@@ -227,7 +227,18 @@ export default {
     }
     // #endif
   },
-  methods:{onDoubanActions (e) {
+  methods:{
+    /**
+     * 本地补丁(第三轮 #13):占位图(加载/失败图)样式清洗。
+     * 上游占位图原样继承内容图的 attrs.style 且 mode=widthFix——内容图带固定 height 时,
+     * 占位盒被压成内容图的宽扁形状,方图吉祥物(人物占满画幅)在里面必然丢头;
+     * 这里剥掉 height/max-height 并配合模板 aspectFit,保证占位图整图可见。
+     */
+    phStyle (style) {
+      if (!style) return ''
+      return style.replace(/(^|;)\s*(max-)?height\s*:[^;]*/g, '$1')
+    },
+    onDoubanActions (e) {
       const detail = e && e.detail ? e.detail : e
       if (typeof this.root.triggerEvent === 'function') {
         this.root.triggerEvent('uhe-douban-actions', detail)

@@ -7,14 +7,17 @@ import { useUpvote } from '@/hooks/useUpvote'
 import { usePageScroll } from '@/hooks/usePageScroll'
 import { usePageTitle } from '@/hooks/usePageTitle'
 import { formatTime } from '@/utils/formatTime'
+import { applyXhhaoDarkPalette, transformXhhaoContent } from '@/utils/xhhao-transform'
 import { useAppConfigStore } from '@/store/appConfig'
+import { useThemeStore } from '@/store/theme'
 import { useFavoritesStore } from '@/store/favorites'
 import { checkAvatarUrl, checkImageUrl } from '@/utils/url'
 import { buildPostFavoriteItem } from '@/utils/favorite'
 import { getDomainOnly } from '@/utils/urlParams'
 import { getEnvBaseUrl } from '@/utils'
 import { handleScrollToSelector } from '@/utils/page'
-import { markdownConfig } from '@/config/markdown'
+import { getArticleTagStyle, markdownConfig } from '@/config/markdown'
+import { sanitizeBrandingText } from '@/utils/branding'
 import { DataLoadingStatusEnum, useDataLoadingStatus } from '@/hooks/useDataLoadingStatus'
 import { imagePreview } from '@/utils/image'
 import type { IComment, IPost } from '@/api/types/halo'
@@ -48,6 +51,21 @@ const result = ref<IPost & {
   stats?: { visit?: number, upvote?: number, comment?: number }
 } | null>(null)
 
+const themeStore = useThemeStore()
+const { isDark } = storeToRefs(themeStore)
+
+/**
+ * 正文渲染内容:先把小组件标记(xhhao-com-* 标签与 ethereal callout 短代码)转成 mp-html 能渲染的标准写法;
+ * 深色下再过一层色值映射(转换器内联样式为静态浅色套,见 applyXhhaoDarkPalette)
+ */
+const renderContent = computed(() => {
+  const transformed = transformXhhaoContent(result.value?.content?.raw || result.value?.content?.content || '')
+  return isDark.value ? applyXhhaoDarkPalette(transformed) : transformed
+})
+
+/** 正文 tagStyle 按当前外观取浅/深套 */
+const articleTagStyle = computed(() => getArticleTagStyle(isDark.value))
+
 const commentModal = ref({
   show: false,
   isComment: false,
@@ -73,6 +91,11 @@ const commentDetail = ref({
 
 /* ---------------- 计算属性 ---------------- */
 const postDetailPageConfig = computed(() => haloConfigs.value.featureConfig?.pages?.postDetail)
+
+/** 版权归属展示值(复验轮 #14:插件端演示值是上游名 uni-halo,命中品牌标记按未配置处理、回退 LQBBY;哥哥在插件后台改后自动生效) */
+const copyrightAuthorDisplay = computed(() =>
+  sanitizeBrandingText(postDetailPageConfig.value?.copyrightAuthor, 'LQBBY'),
+)
 
 const calcIsShowComment = computed(() => !!postDetailPageConfig.value?.showComment)
 /** 是否启用评论（站点开关 + 文章自身开关，文章未配置时视为允许） */
@@ -463,11 +486,11 @@ onShareTimeline(() => {
 
           <!-- 内容 -->
           <view
-            class="uh-global-card-glass uh-shadow-xs box-border rounded-xl p-3 text-3xs text-gray-900 leading-6 !bg-white/10"
+            class="uh-global-card-glass uh-shadow-xs box-border rounded-xl p-3 text-3xs text-gray-900 leading-6"
           >
             <mp-html
-              :content="result?.content?.raw" lazy-load :domain="markdownConfig.domain"
-              :loading-img="markdownConfig.loadingGif" scroll-table selectable :tag-style="markdownConfig.tagStyle"
+              :content="renderContent" lazy-load :domain="markdownConfig.domain"
+              :loading-img="markdownConfig.loadingGif" scroll-table selectable :tag-style="articleTagStyle"
               :container-style="markdownConfig.containStyle" :markdown="true" :show-line-number="true"
               :show-language-name="true" copy-by-long-press @uhe-vote-actions="handleVoteCardActions"
               @uhe-portfolio-actions="handlePortfolioCardActions" @uhe-douban-actions="handleDoubanCardActions"
@@ -491,7 +514,7 @@ onShareTimeline(() => {
               <uh-section-title>版权声明</uh-section-title>
               <view class="mt-3 flex flex-col gap-y-2 text-3xs text-gray-600">
                 <view v-if="postDetailPageConfig.copyrightAuthor" class="leading-5">
-                  版权归属：{{ postDetailPageConfig.copyrightAuthor }}
+                  版权归属：{{ copyrightAuthorDisplay }}
                 </view>
                 <view v-if="postDetailPageConfig.copyrightDesc" class="leading-5">
                   版权说明：{{ postDetailPageConfig.copyrightDesc }}
@@ -524,7 +547,12 @@ onShareTimeline(() => {
           class="uh-global-card-glass box-border h-9 flex flex-1 items-center justify-center gap-x-1 border rounded-full px-5 shadow-none"
           :class="[hasUpvoted() ? 'text-primary' : 'text-gray-900']" @click="handleDoLikesClick"
         >
-          <wd-icon class-prefix="uhemoji-icon" name="-kiss-" size="36rpx" />
+          <!-- 第六轮 #18 反转:三图标全换大肥鱼头;未赞=灰度头+低透明、已赞=全彩头 -->
+          <image
+            :src="hasUpvoted() ? '/static/mascot/dafeiyu-head.png' : '/static/mascot/dafeiyu-head-gray.png'"
+            mode="aspectFit" class="h-[36rpx] w-[36rpx] shrink-0"
+            :class="hasUpvoted() ? '' : 'opacity-50'"
+          />
           <text class="shrink-0 text-xs font-semibold">点赞</text>
         </view>
         <view
@@ -532,14 +560,18 @@ onShareTimeline(() => {
           class="uh-global-card-glass box-border h-9 flex flex-1 items-center justify-center gap-x-1 border rounded-full px-4 shadow-none"
           @click="handleToComment()"
         >
-          <wd-icon class-prefix="uhemoji-icon" name="-thinking" size="36rpx" />
+          <image src="/static/mascot/dafeiyu-head.png" mode="aspectFit" class="h-[36rpx] w-[36rpx] shrink-0" />
           <text class="shrink-0 text-xs text-gray-900 font-semibold">评论</text>
         </view>
         <view
           class="uh-global-card-glass box-border h-9 flex flex-1 items-center justify-center gap-x-1 border rounded-full px-4 shadow-none"
           @click="handleTogglePostFavorite"
         >
-          <wd-icon class-prefix="uhemoji-icon" name="-smile-" size="36rpx" />
+          <image
+            :src="hasFavorited() ? '/static/mascot/dafeiyu-head.png' : '/static/mascot/dafeiyu-head-gray.png'"
+            mode="aspectFit" class="h-[36rpx] w-[36rpx] shrink-0"
+            :class="hasFavorited() ? '' : 'opacity-50'"
+          />
           <text class="shrink-0 text-xs font-semibold" :class="[hasFavorited() ? 'text-primary' : 'text-gray-900']">
             {{ hasFavorited() ? '已收藏' : '收藏' }}
           </text>

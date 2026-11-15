@@ -70,8 +70,10 @@ function handleRecommendModeChange(mode: 'default' | 'pinned' | 'latest' | 'olde
 /* ---------------- 计算属性 ---------------- */
 const appInfo = computed(() => {
   const appInfoData = haloConfigs.value.featureConfig?.profile?.appInfo
+  /* 插件演示名 uni-halo 按未配置处理(复验轮 #10 附带,与登录弹窗/关于项目页同口径) */
+  const isDemoName = (appInfoData?.name || '').toLowerCase() === 'uni-halo'
   return {
-    name: appInfoData?.name || 'uni-halo',
+    name: appInfoData?.name && !isDemoName ? appInfoData.name : 'LQBBY',
     logo: checkImageUrl(appInfoData?.logo),
   }
 })
@@ -237,8 +239,8 @@ onReachBottom(() => {
 
 <template>
   <view class="min-h-screen w-screen flex flex-col bg-page">
-    <!-- 轮播 -->
-    <uh-home-banner />
+    <!-- 状态栏占位(复验轮 #7:头图整块撤除后首页从快捷导航一带开始,顶部留安全间距衔接自定义导航区) -->
+    <view class="shrink-0 pt-safe" />
 
     <!-- 公告 -->
     <uh-home-notify />
@@ -249,8 +251,8 @@ onReachBottom(() => {
     <!-- 快捷导航 -->
     <uh-home-quick-nav />
 
-    <!-- 精选分类 -->
-    <uh-home-category />
+    <!-- 系列(修复轮:原精选分类版块换成博客系列,uh-home-category 组件保留未引用) -->
+    <uh-home-series />
 
     <!-- 最新笔记 -->
     <view class="mb-4 box-border px-3">

@@ -27,9 +27,13 @@ const tokenStore = useTokenStore()
 /* ---------- 应用信息(顶部 logo 展示,getConfigs 下发于 featureConfig.profile.appInfo) ---------- */
 const appInfo = computed(() => {
   const info = configs.value.featureConfig?.profile?.appInfo
+  /* 插件演示值(name=uni-halo / logo=插件 assets 演示图)按未配置处理,与登录弹窗/关于项目页同口径(复验轮 #10 附带);
+     第六轮 #18 核查补齐:本页此前无守卫,演示 logo 会直出、空值落 -smile- 表情回退——现回退终点统一为本地 LQBBY logo */
+  const isDemoLogo = !!info?.logo && info.logo.includes('/plugins/uni-halo/assets/')
+  const isDemoName = (info?.name || '').toLowerCase() === 'uni-halo'
   return {
-    name: info?.name || 'uni-halo',
-    logo: info?.logo ? checkImageUrl(info.logo) : '',
+    name: info?.name && !isDemoName ? info.name : 'LQBBY',
+    logo: info?.logo && !isDemoLogo ? checkImageUrl(info.logo) : '/static/logo.png',
   }
 })
 
@@ -254,25 +258,25 @@ function handleLoginSuccess() {
 </script>
 
 <template>
-  <view class="relative box-border min-h-screen w-screen flex flex-col overflow-hidden bg-[#f5fae8]">
+  <view class="relative box-border min-h-screen w-screen flex flex-col overflow-hidden bg-page">
     <!-- 顶部自定义导航 -->
     <uh-navbar :default-title="pageTitle" :need-placeholder="false" />
 
     <view
-      class="pointer-events-none fixed left-0 top-0 z-0 h-[46vh] w-full from-[#d9f77f] via-[#e8fbaf] to-[#f5fae8] bg-gradient-to-b"
+      class="pointer-events-none fixed left-0 top-0 z-0 h-[46vh] w-full uh-auth-wash"
     />
 
     <view
       class="breathe uh-blur-52 pointer-events-none absolute left-[-80rpx] top-[calc(var(--status-bar-height)+40rpx)] z-0 h-[280rpx] w-[280rpx] rounded-full bg-white/40"
     />
     <view
-      class="uh-blur-52 pointer-events-none absolute right-[-60rpx] top-[180rpx] z-0 h-[220rpx] w-[220rpx] rounded-full bg-[rgba(184,236,63,0.28)]"
+      class="uh-blur-52 pointer-events-none absolute right-[-60rpx] top-[180rpx] z-0 h-[220rpx] w-[220rpx] rounded-full bg-[rgba(83,163,242,0.28)]"
     />
     <view
-      class="uh-blur-44 pointer-events-none absolute bottom-[120rpx] right-[80rpx] z-0 h-[180rpx] w-[180rpx] rounded-full bg-[#ffd53d] opacity-20"
+      class="uh-blur-44 pointer-events-none absolute bottom-[120rpx] right-[80rpx] z-0 h-[180rpx] w-[180rpx] rounded-full uh-deco-blob opacity-20"
     />
     <view
-      class="uh-blur-44 pointer-events-none absolute bottom-[280rpx] left-[-40rpx] z-0 h-[200rpx] w-[200rpx] rounded-full bg-[#ebfabf] opacity-90"
+      class="uh-blur-44 pointer-events-none absolute bottom-[280rpx] left-[-40rpx] z-0 h-[200rpx] w-[200rpx] rounded-full uh-deco-blob opacity-90"
     />
 
     <view class="relative z-10 box-border h-screen w-screen flex flex-col items-center justify-center gap-y-6 px-6">
@@ -281,7 +285,7 @@ function handleLoginSuccess() {
         <view class="flex flex-col items-center">
           <view class="bob relative h-24 w-24">
             <view
-              class="uh-global-card-glass uh-shadow-xs absolute inset-0 flex items-center justify-center overflow-hidden border-2 rounded-full from-[#ebfabf] to-[#b8ec3f] bg-gradient-to-br"
+              class="uh-global-card-glass uh-shadow-xs absolute inset-0 flex items-center justify-center overflow-hidden border-2 rounded-full uh-logo-ring"
             >
               <image v-if="appInfo.logo" class="h-full w-full" :src="appInfo.logo" mode="aspectFill" />
               <wd-icon
@@ -342,7 +346,7 @@ function handleLoginSuccess() {
               <view class="mt-3 flex items-center gap-x-1.5 px-2" @click="rememberMe = !rememberMe">
                 <view
                   class="box-border h-4 w-4 flex items-center justify-center border border-solid rounded"
-                  :class="rememberMe ? 'bg-primary border-primary' : 'border-gray-300 bg-white/60'"
+                  :class="rememberMe ? 'bg-primary border-primary' : 'border-gray-300 uh-float-surface'"
                 >
                   <wd-icon v-if="rememberMe" name="check" size="22rpx" custom-class="text-gray-900" />
                 </view>
@@ -417,7 +421,7 @@ function handleLoginSuccess() {
   box-sizing: border-box;
   height: 88rpx;
   padding: 0 24rpx;
-  background-color: rgb(255 255 255 / 65%);
+  background-color: var(--eth-glass-bg);
   border-radius: 24rpx;
 }
 

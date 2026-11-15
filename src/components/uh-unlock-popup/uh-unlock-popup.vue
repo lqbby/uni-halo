@@ -228,14 +228,14 @@ function handleBackHome() {
       <view class="box-border w-full flex items-center gap-x-3">
         <uh-button
           v-if="closeable" class="flex-1"
-          custom-class="flex-1 uh-global-card-glass uh-shadow-xs text-xs border !py-2.5 !rounded-xl !bg-white/90"
+          custom-class="flex-1 uh-global-card-glass uh-shadow-xs text-xs border !py-2.5 !rounded-xl uh-float-surface"
           @click="handleOnCancel"
         >
           取消
         </uh-button>
         <uh-button
           v-if="isVisibleBackHome" class="flex-1"
-          custom-class="flex-1 uh-global-card-glass box-border !border-none uh-shadow-xs text-xs border !py-2.5 !rounded-xl !bg-white/90"
+          custom-class="flex-1 uh-global-card-glass box-border !border-none uh-shadow-xs text-xs border !py-2.5 !rounded-xl uh-float-surface"
           @click="handleBackHome"
         >
           返回首页

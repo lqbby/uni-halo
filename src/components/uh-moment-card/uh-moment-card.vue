@@ -204,18 +204,27 @@ function handlePreview(index: number, list: { url: string }[]) {
       class="mb-1 mt-2 box-border w-full flex items-center border-t border-black/5 px-4 py-3 text-xs text-gray-400"
       :class="[props.allowComment ? 'justify-between' : 'gap-x-6']"
     >
+      <!-- 第六轮 #18 反转:点赞/评论/收藏三图标全换大肥鱼头;切换态(赞/藏)未激活=灰度头+低透明、已激活=全彩头,保辨识 -->
       <view class="flex items-center gap-x-1" @click.stop="emit('like')">
-        <wd-icon class-prefix="uhemoji-icon" name="-kiss-" size="32rpx" />
+        <image
+          :src="hasUpvoted(moment.metadata.name) ? '/static/mascot/dafeiyu-head.png' : '/static/mascot/dafeiyu-head-gray.png'"
+          mode="aspectFit" class="h-[32rpx] w-[32rpx] shrink-0"
+          :class="hasUpvoted(moment.metadata.name) ? '' : 'opacity-50'"
+        />
         <text class="text-3xs" :class="hasUpvoted(moment.metadata.name) ? 'text-primary' : 'text-gray-600'">
           点赞 {{ upvoteDisplay(moment.stats.upvote, moment.metadata.name) }}
         </text>
       </view>
       <view v-if="props.allowComment" class="flex items-center gap-x-1" @click.stop="emit('comment')">
-        <wd-icon class-prefix="uhemoji-icon" name="-thinking" size="32rpx" />
+        <image src="/static/mascot/dafeiyu-head.png" mode="aspectFit" class="h-[32rpx] w-[32rpx] shrink-0" />
         <text class="text-3xs text-gray-600">评论 {{ moment.stats.totalComment || 0 }}</text>
       </view>
       <view class="flex items-center gap-x-1" @click.stop="emit('favorite')">
-        <wd-icon class-prefix="uhemoji-icon" name="-smile-" size="32rpx" />
+        <image
+          :src="isFavorite('moment', moment.metadata.name) ? '/static/mascot/dafeiyu-head.png' : '/static/mascot/dafeiyu-head-gray.png'"
+          mode="aspectFit" class="h-[32rpx] w-[32rpx] shrink-0"
+          :class="isFavorite('moment', moment.metadata.name) ? '' : 'opacity-50'"
+        />
         <text
           class="text-3xs"
           :class="isFavorite('moment', moment.metadata.name) ? 'text-primary' : 'text-gray-600'"

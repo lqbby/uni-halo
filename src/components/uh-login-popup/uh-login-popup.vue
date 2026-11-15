@@ -32,9 +32,13 @@ const tokenStore = useTokenStore()
 /* ---------- 应用信息(顶部 logo 展示,getConfigs 下发于 featureConfig.profile.appInfo) ---------- */
 const appInfo = computed(() => {
   const info = configs.value.featureConfig?.profile?.appInfo
+  /* 插件演示值(name=uni-halo / logo=插件 assets 演示图)按未配置处理,与关于项目页同口径(复验轮 #10 附带) */
+  const isDemoLogo = !!info?.logo && info.logo.includes('/plugins/uni-halo/assets/')
+  const isDemoName = (info?.name || '').toLowerCase() === 'uni-halo'
   return {
-    name: info?.name || 'uni-halo',
-    logo: info?.logo ? checkImageUrl(info.logo) : '',
+    name: info?.name && !isDemoName ? info.name : 'LQBBY',
+    /* 第六轮 #18 核查:回退终点对齐关于项目页——演示/未配置一律落本地 LQBBY logo,不再落 -smile- 表情回退 */
+    logo: info?.logo && !isDemoLogo ? checkImageUrl(info.logo) : '/static/logo.png',
   }
 })
 
@@ -349,7 +353,7 @@ async function doWechatLogin() {
           <view class="w-full flex items-center gap-x-1.5 pl-2" @click="rememberMe = !rememberMe">
             <view
               class="box-border h-4 w-4 flex items-center justify-center border rounded"
-              :class="rememberMe ? 'bg-primary border-primary' : 'border-gray-300 bg-white/60'"
+              :class="rememberMe ? 'bg-primary border-primary' : 'border-gray-300 uh-float-surface'"
             >
               <wd-icon v-if="rememberMe" name="check" size="22rpx" custom-class="text-gray-900" />
             </view>

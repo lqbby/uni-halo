@@ -405,8 +405,8 @@ export default {
 <style scoped>
 /* ===== 卡片容器（对齐文章卡片：玻璃质感 + primary 边框） ===== */
 .uh-vote-card {
-  --uh-primary: var(--wot-color-theme, #b9e424);
-  --uh-primary-soft: var(--wot-primary-1, #f4fbe0);
+  --uh-primary: var(--wot-color-theme, #53A3F2);
+  --uh-primary-soft: var(--wot-primary-1, #E2F0FF);
   width: 100%;
   box-sizing: border-box;
   position: relative;
@@ -618,7 +618,7 @@ export default {
 
 .voted-badge {
   border-radius: 4rpx;
-  background-color: #d7f94c;
+  background-color: var(--wot-color-secondary, #c6e1ff);
   padding: 2rpx 8rpx;
   font-size: 24rpx;
   color: #6b7280;

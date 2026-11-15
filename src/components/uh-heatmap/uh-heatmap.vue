@@ -4,7 +4,9 @@
  * 按日期统计笔记发布数量,以年度格子图展示
  */
 import { computed, ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import dayjs from 'dayjs'
+import { useThemeStore } from '@/store/theme'
 
 export interface IHeatmapDay {
   date: string
@@ -27,8 +29,11 @@ const currentYear = defineModel<number>('year', { required: true })
 
 const weeks = ['一', '二', '三', '四', '五', '六', '日']
 
-/** 颜色分级(主题色系黄绿渐变,由浅到深) */
-const intensityColors = ['#ebedf0', '#f4fad8', '#e9f79f', '#d7ee52', '#b9e424']
+/** 颜色分级(修复轮:改 Ethereal 蓝色系,由浅到深;明暗双套随外观切换) */
+const INTENSITY_COLORS_LIGHT = ['#ebedf0', '#c6e1ff', '#8fc0f7', '#53a3f2', '#3275b4']
+const INTENSITY_COLORS_DARK = ['#1d2732', '#224a71', '#2f6db3', '#53a3f2', '#63b3ff']
+const { isDark } = storeToRefs(useThemeStore())
+const intensityColors = computed(() => isDark.value ? INTENSITY_COLORS_DARK : INTENSITY_COLORS_LIGHT)
 
 /** 当前年份数据 key(YYYY-MM-DD -> count,date 归一化以兼容带时间的格式) */
 const yearDataMap = computed(() => {
@@ -107,14 +112,14 @@ function getDayColor(day: { count: number, isEmpty: boolean }): string {
   if (day.isEmpty)
     return 'transparent'
   if (day.count === 0)
-    return intensityColors[0]
+    return intensityColors.value[0]
   if (day.count <= 2)
-    return intensityColors[1]
+    return intensityColors.value[1]
   if (day.count <= 4)
-    return intensityColors[2]
+    return intensityColors.value[2]
   if (day.count <= 6)
-    return intensityColors[3]
-  return intensityColors[4]
+    return intensityColors.value[3]
+  return intensityColors.value[4]
 }
 
 /** 点击格子:toast 展示该日日期与发布篇数 */

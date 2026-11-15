@@ -608,8 +608,8 @@ onUnmounted(() => {
 }
 
 .uh-ai-chat__bubble--user {
-  color: #333;
-  background-color: #b9e424;
+  color: #fff;
+  background-color: var(--wot-color-theme, #53a3f2);
   border-bottom-right-radius: 6rpx;
 }
 

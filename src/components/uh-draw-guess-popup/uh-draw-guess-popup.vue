@@ -422,7 +422,7 @@ function handleToDetailPage(draw: IDraw) {
       <view class="box-border w-full flex items-center gap-x-3 pt-2">
         <uh-button
           class="w-full flex-1"
-          custom-class="uh-global-card-glass !border !shadow-none !text-3xs !rounded-xl !bg-white !py-2.5 !text-gray-900"
+          custom-class="uh-global-card-glass !border !shadow-none !text-3xs !rounded-xl uh-float-surface !py-2.5 !text-gray-900"
           @action-click="visible = false"
         >
           关闭

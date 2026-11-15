@@ -329,7 +329,8 @@ onReachBottom(() => {
               v-else
               class="h-full w-full flex items-center justify-center from-[#fdeef1] to-[#fff8f9] bg-gradient-to-b text-gray-400"
             >
-              <wd-icon class-prefix="uhemoji-icon" name="-injury" size="72rpx" />
+              <!-- 第六轮 #18 反转:无图占位换抱箱款(呈现与 primary 无图占位一致,粉渐变盒保留) -->
+              <image src="/static/mascot/dafeiyu-empty.png" mode="aspectFit" class="h-[72rpx] w-[72rpx] rounded-[14rpx]" />
             </view>
             <view
               v-if="item.locked && !unlockedAlbums[item.name]"

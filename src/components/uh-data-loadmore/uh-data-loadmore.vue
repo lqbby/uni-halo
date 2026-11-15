@@ -10,6 +10,6 @@
 
 <template>
 	<view class="w-full py-4 flex items-center justify-center gap-x-2 text-xs text-gray-400">
-		<wd-loading v-if="props.status==='loading'" size="32rpx" color="#D7F94C"></wd-loading> {{ props.text }}
+		<wd-loading v-if="props.status==='loading'" size="32rpx" color="#53A3F2"></wd-loading> {{ props.text }}
 	</view>
 </template>

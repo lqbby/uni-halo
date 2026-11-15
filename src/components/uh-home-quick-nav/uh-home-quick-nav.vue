@@ -14,18 +14,20 @@ const navList = computed(() => {
   return (configured || []).filter(item => item.visible !== false)
 })
 
-/** 解析条目当前生效的图标风格（iconMode 优先，缺省取 icons[0]，旧数据回退 icon/iconPrefix） */
-function resolveItemIcon(item: IQuickNavItem): IQuickNavIconStyle | null {
+/**
+ * 入口图标(换肤第八轮 #20 ①组归口):图标改回消费插件配置——按条目 iconMode
+ * 在 icons 多风格集合中选当前风格(服务端已统一切 ri 线性套),旧 icon 单值字段兜底;
+ * 配置全缺时回退 apps 网格图标。呈现仍由代码统一:主题主色、无彩底块/彩字
+ * (配置的 color/bgColor 是逐项固定色,表达不了全员统一主题色,故不消费)。
+ */
+function resolveNavIcon(item: IQuickNavItem): IQuickNavIconStyle {
   if (item.icons?.length) {
     return item.icons.find(i => i.key === item.iconMode) ?? item.icons[0]
   }
-  return item.icon ? { key: 'emoji-font', prefix: item.iconPrefix || '', iconName: item.icon } : null
-}
-
-/** 图标尺寸：emoji/动物等彩色字体放大一档，ri 线性图标用常规尺寸 */
-function resolveIconSize(item: IQuickNavItem): string {
-  const key = resolveItemIcon(item)?.key || ''
-  return ['emoji-font', 'animal-font'].includes(key) ? '64rpx' : '56rpx'
+  if (item.icon) {
+    return { key: 'legacy', prefix: item.iconPrefix || '', iconName: item.icon }
+  }
+  return { key: 'fallback', prefix: '', iconName: 'apps' }
 }
 
 /* 恋爱模块解锁拦截(目前仅恋爱日记设密码,命中锁定则先解锁再跳转;样式不变) */
@@ -57,20 +59,12 @@ function handleClickNav(item: { path?: string }) {
         @click="handleClickNav(item)"
       >
         <view
-          class="uh-global-card-glass uh-shadow-xs h-13 w-13 flex items-center justify-center border rounded-2xl"
-          :style="{
-            backgroundColor: item.bgColor,
-            color: item.iconColor || item.color,
-          }"
+          class="uh-global-card-glass uh-shadow-xs h-13 w-13 flex items-center justify-center rounded-2xl"
         >
-          <wd-icon
-            :class-prefix="resolveItemIcon(item)?.prefix"
-            :name="resolveItemIcon(item)?.iconName"
-            :size="resolveIconSize(item)"
-          />
+          <wd-icon :class-prefix="resolveNavIcon(item).prefix" :name="resolveNavIcon(item).iconName" size="48rpx" color="var(--eth-primary)" />
         </view>
         <view class="flex flex-col items-center gap-0.5">
-          <text class="max-w-16 truncate text-xs text-gray-900" :style="{ color: item.color }">
+          <text class="max-w-16 truncate text-xs text-gray-900">
             {{ item.title }}
           </text>
         </view>

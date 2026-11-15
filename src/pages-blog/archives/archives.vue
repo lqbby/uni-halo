@@ -30,7 +30,7 @@ const { auditData, auditModeEnabled: calcAuditModeEnabled } = storeToRefs(appCon
 const settingStore = useSettingStore()
 const { settings } = storeToRefs(settingStore)
 
-const siteName = computed(() => appConfigStore.configs.featureConfig?.profile?.appInfo?.name || 'uni-halo')
+const siteName = computed(() => appConfigStore.configs.featureConfig?.profile?.appInfo?.name || 'LQBBY')
 
 /** 归档页列表布局(偏好设置驱动:single=单列 / double=双列) */
 const archivesListLayout = computed(() => settings.value.archivesListLayout)

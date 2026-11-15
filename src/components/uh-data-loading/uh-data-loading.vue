@@ -48,23 +48,34 @@ const customClasses = computed(() => {
 const SizeClasses = {
   mini: {
     icon: '60rpx',
+    img: '92rpx',
     stage: 'h-16 w-16',
     glow: 'h-12 w-12',
     button: 'py-0.5',
   },
   small: {
     icon: '100rpx',
+    img: '150rpx',
     stage: 'h-22 w-22',
     glow: 'h-16 w-16',
     button: ' py-1',
   },
   large: {
     icon: '120rpx',
+    img: '184rpx',
     stage: 'h-32 w-32',
     glow: 'h-24 w-24',
     button: '',
   },
 }
+
+/** Q 版大肥鱼插图(复验轮 #11:替代默认 emoji 表情插图;本地 static;
+ * 第三轮 #13:WebP 改 PNG——微信 iOS 端 <image> 对 WebP 解码不可靠,曾出现加载态大肥鱼不显示;
+ * 第四轮 #17:loading 态换哥哥定稿的羽化透明头(去白底、边缘羽化、底部强渐隐,直接融进页面底,
+ * 无光晕盘/装饰点/底衬,只留头本体 + 浮动动画);
+ * 第七轮 #19 改判:empty/error 两态弃抱箱款白贴纸,三态统一羽化头 bare 呈现
+ * (贴纸/光晕盘/装饰点全去,与 loading 同一语言;抱箱款 dafeiyu-empty 此后只供内容无图占位) */
+const MASCOT_HEAD = '/static/mascot/dafeiyu-head.png'
 
 const sizeClasses = computed(() => {
   return SizeClasses[props.size] ?? SizeClasses.large
@@ -73,11 +84,15 @@ const sizeClasses = computed(() => {
 const isLoading = computed(() => props.loadingStatus === 'loading')
 
 const statusScene = computed(() => {
-  const isLovePage = props.theme === 'love'
+  /* 第七轮 #19 改判:三态统一羽化头 bare(love 分支同——粉色文案/按钮色保留,
+     光晕盘/装饰点/贴纸全去);glowClass 字段仅为模板兼容保留,bare 恒 true 后不再渲染 */
   switch (props.loadingStatus) {
     case 'error':
       return {
         icon: '-injury',
+        img: MASCOT_HEAD,
+        bare: true,
+        round: false,
         glowClass: `${sizeClasses.value.glow} bg-red-100`,
         mainTextClass: 'text-red-400',
         mainText: props.errorText,
@@ -86,7 +101,10 @@ const statusScene = computed(() => {
     case 'empty':
       return {
         icon: '-confused',
-        glowClass: `${sizeClasses.value.glow} ${isLovePage ? 'bg-love/30' : 'bg-primary'}`,
+        img: MASCOT_HEAD,
+        bare: true,
+        round: false,
+        glowClass: `${sizeClasses.value.glow} bg-primary`,
         mainTextClass: 'text-gray-900',
         mainText: props.emptyText,
         subText: props.emptySubText,
@@ -94,7 +112,10 @@ const statusScene = computed(() => {
     default:
       return {
         icon: '-happy-1',
-        glowClass: `${sizeClasses.value.glow} ${isLovePage ? 'bg-love/30' : 'bg-primary'}`,
+        img: MASCOT_HEAD,
+        bare: true,
+        round: false,
+        glowClass: `${sizeClasses.value.glow} bg-primary`,
         mainTextClass: customClasses.value.text,
         mainText: props.loadingText,
         subText: props.loadingSubText,
@@ -111,13 +132,20 @@ const statusScene = computed(() => {
     <view
       class="scene relative z-1 flex items-center justify-center"
       :class="sizeClasses.stage"
+      :style="statusScene.img ? { width: sizeClasses.img, height: sizeClasses.img } : undefined"
     >
-      <view class="glow absolute inset-0 m-auto rounded-full" :class="statusScene.glowClass" />
-      <view class="deco-dot dot-a absolute rounded-full" :class="customClasses.dotA" />
-      <view class="deco-dot dot-b absolute rounded-full" :class="customClasses.dotB" />
+      <!-- 第四轮 #17:bare(羽化头)场景不渲染光晕盘与装饰点,只留头本体压在页面底上 -->
+      <view v-if="!statusScene.bare" class="glow absolute inset-0 m-auto rounded-full" :class="statusScene.glowClass" />
+      <view v-if="!statusScene.bare" class="deco-dot dot-a absolute rounded-full" :class="customClasses.dotA" />
+      <view v-if="!statusScene.bare" class="deco-dot dot-b absolute rounded-full" :class="customClasses.dotB" />
       <view class="bubble">
         <view class="bubble-icon">
-          <wd-icon class-prefix="uhemoji-icon" :name="statusScene.icon" :size="sizeClasses.icon" />
+          <image
+            v-if="statusScene.img" :src="statusScene.img" mode="aspectFit" class="mascot-img"
+            :class="{ 'mascot-img--round': statusScene.round }"
+            :style="{ width: sizeClasses.img, height: sizeClasses.img }"
+          />
+          <wd-icon v-else class-prefix="uhemoji-icon" :name="statusScene.icon" :size="sizeClasses.icon" />
         </view>
       </view>
     </view>
@@ -156,6 +184,17 @@ const statusScene = computed(() => {
 
 .bubble-icon {
   display: inline-block;
+}
+
+/* 大肥鱼插图(第三轮 #13:mode 改 aspectFit + stage 与图同尺寸,整图保全不裁切——原图人物占满画幅,aspectFill 一裁就丢头;
+   第四轮 #17 起、第七轮 #19 三态统一:羽化头本体不套任何框,靠 alpha 羽化直接融进页面底;
+   --round 贴纸圆角为抱箱款时代遗留,现 round 恒 false 不再触发) */
+.mascot-img {
+  display: block;
+}
+
+.mascot-img--round {
+  border-radius: 36rpx;
 }
 
 .glow {

@@ -269,7 +269,7 @@ function close() {
       <view class="box-border w-full flex items-center justify-center gap-x-3">
         <uh-button
           class="flex-1"
-          custom-class="flex-1 uh-global-card-glass uh-shadow-xs border !py-2.5 !rounded-xl !text-3xs !bg-white/90"
+          custom-class="flex-1 uh-global-card-glass uh-shadow-xs border !py-2.5 !rounded-xl !text-3xs uh-float-surface"
           @click="close"
         >
           取消
@@ -291,7 +291,7 @@ function close() {
   box-sizing: border-box;
   height: 74rpx;
   padding: 0 24rpx;
-  background-color: rgb(255 255 255 / 65%);
+  background-color: var(--eth-glass-bg);
   border-radius: 20rpx;
   width: 100%;
 }

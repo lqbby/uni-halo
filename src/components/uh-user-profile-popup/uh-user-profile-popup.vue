@@ -152,9 +152,9 @@ function handleCopyWebsite() {
     @close="closeUserProfilePopup()"
   >
     <view v-if="payload.username || payload.anonymous" class="uh-profile-fade flex flex-col">
-      <view class="relative box-border w-full overflow-hidden rounded-2xl bg-white/80 pb-3">
+      <view class="uh-global-card-glass relative box-border w-full overflow-hidden rounded-2xl pb-3">
         <view
-          class="uh-global-card-glass uh-shadow-xs absolute right-2 top-2 z-30 box-border h-6 w-6 flex items-center justify-center border rounded-lg text-gray-900 !bg-white/80"
+          class="uh-global-card-glass uh-shadow-xs uh-float-surface absolute right-2 top-2 z-30 box-border h-6 w-6 flex items-center justify-center border rounded-lg text-gray-900"
           @click="closeUserProfilePopup"
         >
           <wd-icon name="close" size="28rpx" />
@@ -302,7 +302,7 @@ function handleCopyWebsite() {
         <view class="box-border flex items-center gap-x-3 px-3 pt-2">
           <uh-button
             class="flex-1"
-            custom-class="uh-global-card-glass !border !rounded-xl !bg-white !py-2.5 !text-3xs !text-gray-900"
+            custom-class="uh-global-card-glass !border !rounded-xl uh-float-surface !py-2.5 !text-3xs !text-gray-900"
             @click="closeUserProfilePopup"
           >
             关闭

@@ -9,7 +9,7 @@ import { getUnreadNotificationCount } from '@/api/notification'
 import { useTokenStore } from '@/store/token'
 import { useUserStore } from '@/store/user'
 import { usePermission } from '@/hooks/usePermission'
-import { useCardBgSrc, useWornSlots } from '@/hooks/useWornSlots'
+import { useWornSlots } from '@/hooks/useWornSlots'
 import type { PermissionKey } from '@/config/permissions'
 
 defineOptions({
@@ -45,8 +45,6 @@ const { userInfo } = storeToRefs(useUserStore())
 
 /** 互动增强装饰槽位(登录用户自身;插件未启用/审核模式/站点开关关闭时全 invisible) */
 const wornSlots = useWornSlots(() => userInfo.value.username)
-/** 名片背景（素材缺失/装载失败回退博主页背景图，连兜底未配置则为空串不渲染） */
-const { cardBgSrc, onCardBgError } = useCardBgSrc(() => wornSlots.value?.cardBackground.url || '')
 
 const { can } = usePermission()
 
@@ -54,6 +52,9 @@ const dialog = useDialog('user-popup')
 
 // 获取窗口信息
 const windowInfo = uni.getWindowInfo()
+
+/** 状态栏高度(主题头部渐变带从屏幕顶铺起,身份区需让出状态栏) */
+const statusBarHeight = windowInfo.statusBarHeight || 0
 
 const containerStyle = computed(() => ({
   // paddingTop: `${windowInfo.statusBarHeight}px`,
@@ -214,75 +215,53 @@ function handleLogout() {
 
 <template>
   <uh-glass-popup
-    v-model="popupVisible" position="left" custom-class="rounded-rt-xl rounded-rb-xl !border !border-l-none !border-t-none"
+    v-model="popupVisible" position="left" custom-class="uh-drawer-panel rounded-rt-xl rounded-rb-xl"
     :z-index="110" hide-when-close
   >
     <view class="relative box-border h-full w-[70vw] flex flex-col gap-y-4 overflow-hidden" :style="[containerStyle]">
+      <!-- 主题头部(第三轮 #12/#15:去掉名片背景图与浮动玻璃用户卡,改博主页 #10 同语言的双套渐变头部,身份信息直接进头部) -->
       <view
-        v-if="false"
-        class="uh-global-card-glass absolute right-4 top-4 z-30 box-border h-6 w-6 flex items-center justify-center border rounded-lg bg-white/90 text-gray-900 !shadow-none"
-        @click="handleClose()"
+        v-if="updateNowTime().hasLogin" class="uh-blogger-hero-bg box-border w-full shrink-0 px-4 pb-5"
+        :style="{ paddingTop: `${statusBarHeight + 20}px` }"
+        @click="handleToPage(profileEntry('my-profile'))"
       >
-        <wd-icon name="close" size="28rpx" />
-      </view>
-      <view v-if="cardBgSrc" class="absolute left-0 top-0 h-42 w-full overflow-hidden">
-        <image
-          :src="cardBgSrc"
-          class="pointer-events-none absolute inset-0 h-full w-full" mode="aspectFill"
-          @error="onCardBgError()"
-        />
-        <view class="uh-profile-mask pointer-events-none inset-0 h-full w-full" />
-        <view
-          class="pointer-events-none absolute bottom-0 left-0 h-6 w-full"
-          style="background:linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(255, 255, 255, 0.7));"
-        />
-      </view>
-      <!-- 用户信息卡片 -->
-      <view v-if="updateNowTime().hasLogin" class="box-border w-full flex shrink-0 px-4 pt-30">
-        <view
-          class="uh-global-card-glass relative w-full overflow-hidden rounded-xl bg-white/80 !shadow-none"
-          @click="handleToPage(profileEntry('my-profile'))"
-        >
-          <view
-            class="relative z-20 box-border flex items-center gap-x-2 p-3"
-          >
-            <view class="relative shrink-0">
-              <wd-avatar
-                :src="checkAvatarUrl(userInfo.avatar)" :text="getAvatarFallbackText(userInfo.nickname)"
-                shape="round"
-                custom-class="uh-global-card-glass uh-shadow-xs !h-12 !w-12 !shrink-0 !text-gray-900 !font-bold"
-                class="!rounded-full" mode="aspectFill"
-              />
+        <view class="box-border flex items-center gap-x-3">
+          <view class="relative shrink-0">
+            <wd-avatar
+              :src="checkAvatarUrl(userInfo.avatar)" :text="getAvatarFallbackText(userInfo.nickname)"
+              shape="round"
+              custom-class="uh-global-card-glass uh-shadow-xs !h-12 !w-12 !shrink-0 !text-gray-900 !font-bold"
+              class="!rounded-full" mode="aspectFill"
+            />
+            <image
+              v-if="wornSlots.avatarFrame.visible" :src="wornSlots.avatarFrame.url"
+              class="uh-frame-center pointer-events-none absolute left-1/2 top-1/2 h-14 w-14"
+              mode="aspectFit"
+            />
+          </view>
+          <view class="min-w-0 flex-1">
+            <view class="flex items-center gap-x-1">
+              <text class="line-clamp-1 text-sm text-gray-900 font-semibold" :style="wornSlots.nameStyle.style">{{ userInfo.nickname }}</text>
               <image
-                v-if="wornSlots.avatarFrame.visible" :src="wornSlots.avatarFrame.url"
-                class="uh-frame-center pointer-events-none absolute left-1/2 top-1/2 h-14 w-14"
-                mode="aspectFit"
+                v-if="wornSlots.primaryBadge.visible" :src="wornSlots.primaryBadge.url"
+                class="h-4 w-4 shrink-0 !block" mode="aspectFit"
               />
             </view>
-            <view class="min-w-0 flex-1">
-              <view class="flex items-center gap-x-1">
-                <text class="line-clamp-1 text-sm text-gray-900 font-semibold" :style="wornSlots.nameStyle.style">{{ userInfo.nickname }}</text>
-                <image
-                  v-if="wornSlots.primaryBadge.visible" :src="wornSlots.primaryBadge.url"
-                  class="h-4 w-4 shrink-0 !block" mode="aspectFit"
-                />
-              </view>
-              <text
-                v-if="wornSlots.title.visible" class="mt-1 box-border max-w-fit shrink-0 truncate rounded-full px-2 py-[1px] text-[10px]"
-                :style="wornSlots.title.style"
-              >
-                {{ wornSlots.title.text }}
-              </text>
-              <text v-else class="mt-0.5 block truncate text-3xs text-gray-400">
-                @{{ userInfo.username }}
-              </text>
-            </view>
-            <view
-              class="uh-global-card-glass h-7 w-7 flex shrink-0 items-center justify-center border rounded-lg"
-              @click.stop="handleToPage(profileEntry('my-profile'))"
+            <text
+              v-if="wornSlots.title.visible" class="mt-1 box-border max-w-fit shrink-0 truncate rounded-full px-2 py-[1px] text-[10px]"
+              :style="wornSlots.title.style"
             >
-              <wd-icon name="edit" size="28rpx" custom-class="text-gray-500" />
-            </view>
+              {{ wornSlots.title.text }}
+            </text>
+            <text v-else class="mt-0.5 block truncate text-3xs text-gray-500">
+              @{{ userInfo.username }}
+            </text>
+          </view>
+          <view
+            class="uh-float-surface h-7 w-7 flex shrink-0 items-center justify-center rounded-full"
+            @click.stop="handleToPage(profileEntry('my-profile'))"
+          >
+            <wd-icon name="edit" size="28rpx" custom-class="text-primary" />
           </view>
         </view>
       </view>
@@ -293,10 +272,10 @@ function handleLogout() {
         <view class="grid grid-cols-3 mt-3 box-border gap-2.5">
           <view
             v-for="entry in PROFILE_ENTRIES" :key="entry.key"
-            class="uh-global-card-glass flex flex-col items-center gap-y-1 overflow-hidden rounded-xl p-2 !shadow-none"
+            class="uh-global-card-glass flex flex-col items-center gap-y-1 overflow-hidden rounded-2xl px-2 py-3 !shadow-none"
             @click="handleToPage(entry)"
           >
-            <view class="relative box-border w-full flex items-center justify-center text-gray-900">
+            <view class="relative box-border w-full flex items-center justify-center text-primary">
               <wd-icon :name="entry.icon" size="52rpx" />
               <view
                 v-if="entry.key === 'notifications' && unreadNotifyCount > 0"
@@ -320,10 +299,10 @@ function handleLogout() {
           <view class="box-border flex flex-col gap-y-2">
             <view
               v-for="entry in visibleAdminEntries" :key="entry.key"
-              class="uh-global-card-glass flex items-center gap-x-2 rounded-xl px-3 py-2 !shadow-none"
+              class="uh-global-card-glass flex items-center gap-x-2 rounded-2xl px-3 py-2 !shadow-none"
               @click="handleToAdmin(entry.url)"
             >
-              <wd-icon :name="entry.icon" size="32rpx" custom-class="text-gray-900 dark:text-gray-100" />
+              <wd-icon :name="entry.icon" size="32rpx" custom-class="text-primary" />
               <text class="flex-1 text-3xs text-gray-900 dark:text-gray-100">{{ entry.label }}</text>
               <wd-icon name="arrow-right" size="28rpx" custom-class="text-gray-400" />
             </view>
@@ -337,13 +316,12 @@ function handleLogout() {
         v-if="updateNowTime().hasLogin" class="box-border w-full flex shrink-0 items-center px-4"
         :class="[isWechat ? '' : 'pb-4']"
       >
-        <uh-button
-          class="flex-1"
-          custom-class="flex-1 uh-global-card-glass uh-shadow-xs border !py-2.5 !rounded-full !bg-red-400 !text-white !text-3xs"
-          @action-click="handleLogout()"
+        <view
+          class="uh-global-card-glass uh-shadow-xs box-border flex flex-1 items-center justify-center rounded-full py-2.5"
+          @click="handleLogout()"
         >
-          退出登录
-        </uh-button>
+          <text class="uh-danger-text text-3xs">退出登录</text>
+        </view>
       </view>
     </view>
   </uh-glass-popup>
@@ -354,12 +332,5 @@ function handleLogout() {
 /* -translate-* 工具类在端内不支持,头像框居中经此类实现 */
 .uh-frame-center {
   transform: translate(-50%, -50%);
-}
-
-/* 素材带磨砂面纱(对齐 user-profile 顶部/资料卡弹窗) */
-.uh-profile-mask {
-  background-color: rgba(0, 0, 0, 0.075);
-  backdrop-filter: blur(2rpx);
-  -webkit-backdrop-filter: blur(2rpx);
 }
 </style>

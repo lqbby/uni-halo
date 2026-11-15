@@ -509,9 +509,9 @@ onReachBottom(() => {
                   <!-- 无图 -->
                   <view
                     v-else
-                    class="h-16 w-16 flex shrink-0 items-center justify-center from-[#ebfabf] to-[#f5fae8] bg-gradient-to-b text-gray-400"
+                    class="h-16 w-16 flex shrink-0 items-center justify-center uh-img-placeholder text-gray-400"
                   >
-                    <wd-icon class-prefix="uhemoji-icon" name="-injury" size="48rpx" />
+                    <image src="/static/mascot/dafeiyu-empty.png" mode="aspectFit" class="h-[48rpx] w-[48rpx] rounded-[10rpx]" />
                   </view>
                   <view class="box-border flex flex-1 flex-col justify-center overflow-hidden pl-4">
                     <view class="flex items-center text-sm text-gray-900 font-bold">
@@ -580,9 +580,9 @@ onReachBottom(() => {
                     <!-- 无图 -->
                     <view
                       v-else
-                      class="uh-global-card-glass h-20 w-20 flex shrink-0 items-center justify-center from-[#ebfabf] to-[#f5fae8] bg-gradient-to-b text-gray-400"
+                      class="uh-global-card-glass h-20 w-20 flex shrink-0 items-center justify-center uh-img-placeholder text-gray-400"
                     >
-                      <wd-icon class-prefix="uhemoji-icon" name="-injury" size="48rpx" />
+                      <image src="/static/mascot/dafeiyu-empty.png" mode="aspectFit" class="h-[48rpx] w-[48rpx] rounded-[10rpx]" />
                     </view>
                     <view class="ml-4 flex flex-1 flex-col justify-center gap-y-1.5">
                       <view class="text-sm text-gray-900 font-semibold">
@@ -674,9 +674,9 @@ onReachBottom(() => {
                   <!-- 无图 -->
                   <view
                     v-else
-                    class="h-16 w-16 flex shrink-0 items-center justify-center from-[#ebfabf] to-[#f5fae8] bg-gradient-to-b text-gray-400"
+                    class="h-16 w-16 flex shrink-0 items-center justify-center uh-img-placeholder text-gray-400"
                   >
-                    <wd-icon class-prefix="uhemoji-icon" name="-injury" size="48rpx" />
+                    <image src="/static/mascot/dafeiyu-empty.png" mode="aspectFit" class="h-[48rpx] w-[48rpx] rounded-[10rpx]" />
                   </view>
                   <view class="box-border flex flex-1 flex-col gap-y-1 overflow-hidden pl-4">
                     <view
@@ -759,9 +759,9 @@ onReachBottom(() => {
                     <!-- 无图 -->
                     <view
                       v-else
-                      class="h-16 w-16 flex items-center justify-center from-[#ebfabf] to-[#f5fae8] bg-gradient-to-b text-gray-400"
+                      class="h-16 w-16 flex items-center justify-center uh-img-placeholder text-gray-400"
                     >
-                      <wd-icon class-prefix="uhemoji-icon" name="-injury" size="48rpx" />
+                      <image src="/static/mascot/dafeiyu-empty.png" mode="aspectFit" class="h-[48rpx] w-[48rpx] rounded-[10rpx]" />
                     </view>
                   </view>
 

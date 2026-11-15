@@ -56,7 +56,7 @@ const dateText = computed(() => {
 
 <template>
   <view
-    class="uh-global-card-glass uh-shadow-xs box-border w-full overflow-hidden rounded-xl bg-white/80"
+    class="uh-global-card-glass uh-shadow-xs box-border w-full overflow-hidden rounded-xl"
     @click="emit('tap')"
   >
     <view v-if="coverUrl" class="relative h-32 w-full overflow-hidden">

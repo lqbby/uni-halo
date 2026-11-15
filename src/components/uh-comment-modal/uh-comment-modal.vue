@@ -413,13 +413,13 @@ watch(() => props.show, (newVal) => {
               <view class="h-10 w-29 flex shrink-0 items-center justify-center">
                 <uh-button
                   v-if="captchaData.status === 'loading'" class="flex-1"
-                  custom-class="uh-global-card-glass w-full border !py-2.5 !text-3xs !text-gray-900 shadow-none !rounded-xl !bg-white"
+                  custom-class="uh-global-card-glass w-full border !py-2.5 !text-3xs !text-gray-900 shadow-none !rounded-xl uh-float-surface"
                 >
                   获取中...
                 </uh-button>
                 <uh-button
                   v-else-if="captchaData.status === 'fail'" class="flex-1"
-                  custom-class="uh-global-card-glass w-full border !py-2.5 !text-3xs !text-red-500 shadow-none !rounded-xl !bg-white"
+                  custom-class="uh-global-card-glass w-full border !py-2.5 !text-3xs !text-red-500 shadow-none !rounded-xl uh-float-surface"
                   @click="handleGetCaptchaImage()"
                 >
                   点击刷新
@@ -449,7 +449,7 @@ watch(() => props.show, (newVal) => {
         <uh-button
           v-if="!isLoggedIn"
           class="shrink-0"
-          custom-class="uh-global-card-glass uh-shadow-xs !border !py-2.5 !rounded-xl !text-3xs !bg-white !text-gray-900"
+          custom-class="uh-global-card-glass uh-shadow-xs !border !py-2.5 !rounded-xl !text-3xs uh-float-surface !text-gray-900"
           @click="handleLogin"
         >
           登录

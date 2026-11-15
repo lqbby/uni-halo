@@ -24,7 +24,7 @@ definePage({
 
 const { scrollY, updatePageScrollValue } = usePageScroll()
 const appConfigStore = useAppConfigStore()
-const siteName = computed(() => appConfigStore.configs.featureConfig?.profile?.appInfo?.name || 'uni-halo')
+const siteName = computed(() => appConfigStore.configs.featureConfig?.profile?.appInfo?.name || 'LQBBY')
 
 const slug = ref('')
 const project = ref<IProject>()

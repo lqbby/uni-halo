@@ -40,7 +40,7 @@ watch(
 <template>
   <view
     v-if="content"
-    class="uh-global-card-glass relative box-border overflow-hidden border border-[#EFF1C9] rounded-xl border-solid p-4 pb-3.5 !shadow-none"
+    class="uh-global-card-glass relative box-border overflow-hidden border uh-line-border rounded-xl border-solid p-4 pb-3.5 !shadow-none"
   >
     <view class="hk-glow" />
     <view class="relative flex items-center justify-between">
@@ -74,7 +74,7 @@ watch(
   width: 168rpx;
   height: 168rpx;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(185, 228, 36, 0.18), transparent 68%);
+  background: radial-gradient(circle, rgba(83, 163, 242, 0.16), transparent 68%);
 }
 
 .hk-tag::before {

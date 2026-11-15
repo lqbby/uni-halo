@@ -133,9 +133,9 @@ onPageScroll((option: Page.PageScrollOption) => {
               <!-- 无图 -->
               <view
                 v-else
-                class="h-16 w-22 flex shrink-0 items-center justify-center from-[#ebfabf] to-[#f5fae8] bg-gradient-to-b text-gray-400"
+                class="h-16 w-22 flex shrink-0 items-center justify-center uh-img-placeholder text-gray-400"
               >
-                <wd-icon class-prefix="uhemoji-icon" name="-injury" size="48rpx" />
+                <image src="/static/mascot/dafeiyu-empty.png" mode="aspectFit" class="h-[48rpx] w-[48rpx] rounded-[10rpx]" />
               </view>
               <view class="min-w-0 flex-1">
                 <view class="truncate text-sm text-gray-900 font-bold">

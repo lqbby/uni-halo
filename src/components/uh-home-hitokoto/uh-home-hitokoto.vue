@@ -93,7 +93,7 @@ watch(isShowHitokoto, (value, oldValue) => {
 <template>
   <view
     v-if="isShowHitokoto && uniHaloPluginAvailable"
-    class="uh-global-card-glass relative mx-3 mb-1 mt-2 box-border overflow-hidden border border-[#EFF1C9] rounded-xl border-solid p-4 pb-3.5 !shadow-none"
+    class="uh-global-card-glass relative mx-3 mb-1 mt-2 box-border overflow-hidden rounded-xl p-4 pb-3.5 !shadow-none"
     @click="handleNext()"
   >
     <!-- 右上角光晕 -->
@@ -106,7 +106,7 @@ watch(isShowHitokoto, (value, oldValue) => {
 
     <!-- 内容 -->
     <view
-      class="relative mt-3 text-[27rpx] text-[#1F2937] font-medium leading-5 tracking-wider transition-all duration-250"
+      class="relative mt-3 text-[27rpx] text-gray-900 font-medium leading-5 tracking-wider transition-all duration-250"
       :class="loadingStatus === DataLoadingStatusEnum.Loading ? 'opacity-35' : ''"
     >
       {{ content }}
@@ -147,7 +147,7 @@ watch(isShowHitokoto, (value, oldValue) => {
   width: 168rpx;
   height: 168rpx;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(185, 228, 36, 0.18), transparent 68%);
+  background: radial-gradient(circle, rgba(83, 163, 242, 0.16), transparent 68%);
 }
 
 .hk-tag::before {

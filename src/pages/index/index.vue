@@ -87,29 +87,30 @@ onLoad(async () => {
 </script>
 
 <template>
-  <view class="relative min-h-screen w-screen flex flex-col items-center justify-center overflow-hidden bg-[#f5fae8]">
+  <view class="relative min-h-screen w-screen flex flex-col items-center justify-center overflow-hidden bg-page">
     <view
-      class="fixed left-0 top-0 z-0 h-[46vh] w-full from-[#d9f77f] via-[#e8fbaf] to-[#f5fae8] bg-gradient-to-b"
+      class="fixed left-0 top-0 z-0 h-[46vh] w-full uh-auth-wash"
     />
 
     <view
       class="breathe uh-blur-52 pointer-events-none absolute left-[-60rpx] top-[16vh] z-0 h-[260rpx] w-[260rpx] rounded-full bg-white/40"
     />
     <view
-      class="uh-blur-52 pointer-events-none absolute right-[-48rpx] top-[8vh] z-0 h-[200rpx] w-[200rpx] rounded-full bg-[rgba(184,236,63,0.28)]"
+      class="uh-blur-52 pointer-events-none absolute right-[-48rpx] top-[8vh] z-0 h-[200rpx] w-[200rpx] rounded-full bg-[rgba(83,163,242,0.28)]"
     />
     <view
       class="uh-blur-52 pointer-events-none absolute bottom-[14vh] right-[72rpx] z-0 h-[160rpx] w-[160rpx] rounded-full bg-white/40"
     />
     <view
-      class="uh-blur-52 pointer-events-none absolute bottom-[6vh] left-[48rpx] z-0 h-[140rpx] w-[140rpx] rounded-full bg-[#ebfabf] opacity-90"
+      class="uh-blur-52 pointer-events-none absolute bottom-[6vh] left-[48rpx] z-0 h-[140rpx] w-[140rpx] rounded-full uh-deco-blob opacity-90"
     />
 
     <view class="relative z-10 h-28 w-28">
       <view
-        class="bob uh-global-card-glass absolute inset-0 flex items-center justify-center border-4 border-white rounded-full border-solid from-[#ebfabf] to-[#b8ec3f] bg-gradient-to-br"
+        class="bob uh-global-card-glass absolute inset-0 flex items-center justify-center border-4 border-white rounded-full border-solid uh-logo-ring"
       >
-        <wd-icon class-prefix="uhemoji-icon" name="-flushed" size="120rpx" class="text-gray-900" />
+        <!-- 第五轮 #18:启动加载图换羽化大肥鱼头(与 uh-data-loading 加载态同图) -->
+        <image src="/static/mascot/dafeiyu-head.png" mode="aspectFit" class="h-[160rpx] w-[160rpx]" />
       </view>
     </view>
 

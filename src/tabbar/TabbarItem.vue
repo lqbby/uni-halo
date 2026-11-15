@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { CustomTabBarItem } from './types'
+import { storeToRefs } from 'pinia'
 import { getI18nText } from './i18n'
 import { tabbarStore } from './store'
+import { useThemeStore } from '@/store/theme'
 
 const props = defineProps<{
   item: CustomTabBarItem
@@ -21,6 +23,16 @@ function isActive(index: number) {
   return tabbarStore.curIdx === index
 }
 
+const { isDark } = storeToRefs(useThemeStore())
+
+/** uiLib 图标色:按选中态 × 外观直接给十六进制(与 --eth-* 双套同值,不走 var 解析) */
+function iconColor(index: number) {
+  if (isActive(index)) {
+    return isDark.value ? '#63B3FF' : '#53A3F2'
+  }
+  return isDark.value ? '#8FA1B5' : '#303133'
+}
+
 const useTitle = ref(false)
 
 const _customClass = computed(() => {
@@ -31,12 +43,10 @@ const _customClass = computed(() => {
 <template>
   <view class="box-border flex flex-col items-center justify-center overflow-hidden rounded-full px-3" :class="_customClass">
     <template v-if="item.iconType === 'uiLib'">
-      <view class="text-primary">
-        <wd-icon :name="item.icon" size="56rpx" />
-      </view>
+      <wd-icon :name="item.icon" size="52rpx" :color="iconColor(index)" />
     </template>
     <template v-if="item.iconType === 'unocss' || item.iconType === 'iconfont'">
-      <view class="flex-1 text-20px" :class="[item.icon]" />
+      <view class="flex-1 text-26px" :class="[item.icon]" />
     </template>
     <template v-if="item.iconType === 'image'">
       <image

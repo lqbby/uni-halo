@@ -30,7 +30,7 @@ const pageTitle = usePageTitle('gallery', '我的图库')
 const appConfigStore = useAppConfigStore()
 const { configs: haloConfigs, auditData, auditModeEnabled: calcAuditModeEnabled } = storeToRefs(appConfigStore)
 
-const siteName = computed(() => haloConfigs.value.featureConfig?.profile?.appInfo?.name || 'uni-halo')
+const siteName = computed(() => haloConfigs.value.featureConfig?.profile?.appInfo?.name || 'LQBBY')
 
 /** 依赖插件(PluginPhotos) */
 const { pluginId, checking, tips, available: uniHaloPluginAvailable, check: checkPluginAvailable } = usePluginAvailable({

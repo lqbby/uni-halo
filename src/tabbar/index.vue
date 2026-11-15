@@ -82,8 +82,8 @@ const rightButton = computed(() => {
 const noRightTabbarList = computed(() => {
   return tabbarList.value.filter(item => !item.isRightButton)
 })
-const activeColor = 'var(--wot-color-theme, #1890ff)'
-const inactiveColor = '#333'
+const activeColor = 'var(--wot-color-theme, #53A3F2)'
+const inactiveColor = 'var(--eth-tab-inactive, #303133)'
 function getColorByIndex(index: number) {
   return tabbarStore.curIdx === index ? activeColor : inactiveColor
 }
@@ -109,7 +109,7 @@ onShow(() => {
     <view class="fixed bottom-0 z-100 box-border w-full px-12 pb-safe" :style="[safeBottomStyle]">
       <view class="box-border w-full flex items-center justify-between gap-x-2" @touchmove.stop.prevent>
         <view
-          class="uh-global-card-glass box-border flex flex-1 items-center gap-x-1 border rounded-full bg-white/75 p-1"
+          class="uh-tabbar-bar box-border flex flex-1 items-center gap-x-1 rounded-full p-1"
         >
           <view
             v-for="(item, index) in noRightTabbarList" :key="index" class="flex-1 text-gray-900"
@@ -117,13 +117,13 @@ onShow(() => {
           >
             <TabbarItem
               :item="item" :index="index"
-              :custom-class="isActive(index) ? 'relative uh-global-card-glass border' : ''"
+              :custom-class="isActive(index) ? 'relative uh-tabbar-active' : ''"
             />
           </view>
         </view>
         <view
           v-if="rightButton.item"
-          class="uh-global-card-glass h-50px w-50px flex shrink-0 items-center justify-center border rounded-full bg-white/65 p-1"
+          class="uh-tabbar-bar h-50px w-50px flex shrink-0 items-center justify-center rounded-full p-1"
           @click="handleClickRightButton()"
         >
           <TabbarItem :item="rightButton.item" :index="rightButton.index" :is-bulge="true" />

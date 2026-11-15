@@ -129,39 +129,39 @@ export const customTabbarList: CustomTabBarItem[] = [
   //   icon: '/static/tabbar/home.png',
   //   iconActive: '/static/tabbar/homeHL.png',
   // },
+  // 换肤 Q9=B:五图标用线性风图标。
+  // 修复轮(2026-11-15):一期曾用 UnoCSS mask 图标(i-my-icons-tab-*,SVG 经 CSS 变量
+  // --un-icon 喂给 -webkit-mask),真机微信 WXSS 下字形不渲染(栏体与选中胶囊在、
+  // 图标全空)。改走 wd-icon 字体图标(uiLib):与全站其余图标同一渲染路径,真机已证可见;
+  // 图标名取 wot 字体线性款 home/apps/image/message/user,配色由 TabbarItem 按
+  // 选中态 + 外观直接给十六进制色(不依赖 var() 在 mask/inline 上的解析)。
   {
-    icon: '/static/tabbar/select_home.png',
-    iconActive: '/static/tabbar/select_home_active.png',
-    iconType: 'image',
+    icon: 'home',
+    iconType: 'uiLib',
     pagePath: 'pages/tabbar/home/home',
     text: '%tabbar.home%',
   },
   {
-    icon: '/static/tabbar/select_category.png',
-    iconActive: '/static/tabbar/select_category_active.png',
-    iconType: 'image',
+    icon: 'apps',
+    iconType: 'uiLib',
     pagePath: 'pages/tabbar/category/category',
     text: '%tabbar.category%',
   },
-
   {
-    icon: '/static/tabbar/select_gallery.png',
-    iconActive: '/static/tabbar/select_gallery_active.png',
-    iconType: 'image',
+    icon: 'image',
+    iconType: 'uiLib',
     pagePath: 'pages/tabbar/gallery/gallery',
     text: '%tabbar.gallery%',
   },
   {
-    icon: '/static/tabbar/select_links.png',
-    iconActive: '/static/tabbar/select_links_active.png',
-    iconType: 'image',
+    icon: 'message',
+    iconType: 'uiLib',
     pagePath: 'pages/tabbar/moments/moments',
     text: '%tabbar.moments%',
   },
   {
-    icon: '/static/tabbar/select_mine.png',
-    iconActive: '/static/tabbar/select_mine_active.png',
-    iconType: 'image',
+    icon: 'user',
+    iconType: 'uiLib',
     pagePath: 'pages/tabbar/blogger/blogger',
     text: '%tabbar.mine%',
   },
@@ -194,10 +194,11 @@ export const isNativeTabbar = selectedTabbarStrategy === TABBAR_STRATEGY_MAP.NAT
 const _tabbar: TabBar = {
   // 只有微信小程序支持 custom。App 和 H5 不生效
   custom: selectedTabbarStrategy === TABBAR_STRATEGY_MAP.CUSTOM_TABBAR,
-  color: '#303133',
-  selectedColor: '#b9e424',
-  backgroundColor: '#ffffff',
-  borderStyle: 'white',
+  // 原生层配色走 theme.json 变量(跟随系统双套)
+  color: '@tabColor',
+  selectedColor: '@tabSelectedColor',
+  backgroundColor: '@tabBgColor',
+  borderStyle: '@tabBorderStyle',
   // height: '50px',
   // fontSize: '10px',
   // iconWidth: '24px',

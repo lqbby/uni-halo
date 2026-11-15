@@ -186,7 +186,7 @@ async function handleOnConfirm() {
       <!-- 底部固定操作区域 -->
       <view class="box-border w-full flex items-center gap-x-3">
         <uh-button
-          custom-class="flex-1 uh-global-card-glass uh-shadow-xs border !py-2.5 !rounded-xl !text-3xs !bg-white/90"
+          custom-class="flex-1 uh-global-card-glass uh-shadow-xs border !py-2.5 !rounded-xl !text-3xs uh-float-surface"
           @click="handleOnCancel"
         >
           取消

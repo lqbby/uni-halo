@@ -31,7 +31,7 @@ const pageTitle = usePageTitle('douban', '豆瓣')
 const appConfigStore = useAppConfigStore()
 const { auditModeEnabled: calcAuditModeEnabled } = storeToRefs(appConfigStore)
 
-const siteName = computed(() => appConfigStore.configs.featureConfig?.profile?.appInfo?.name || 'uni-halo')
+const siteName = computed(() => appConfigStore.configs.featureConfig?.profile?.appInfo?.name || 'LQBBY')
 
 /** 依赖插件(PluginDouban)，不可用时展示占位并可重试 */
 const { pluginId, checking, tips, available: uniHaloPluginAvailable, check: checkPluginAvailable } = usePluginAvailable({

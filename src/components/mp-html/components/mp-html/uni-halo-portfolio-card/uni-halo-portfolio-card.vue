@@ -128,8 +128,8 @@ export default {
 <style scoped>
 /* ===== 卡片容器（对齐文章卡片：primary 边框） ===== */
 .uh-portfolio-card {
-  --uh-primary: var(--wot-color-theme, #b9e424);
-  --uh-primary-soft: var(--wot-primary-1, #f4fbe0);
+  --uh-primary: var(--wot-color-theme, #53A3F2);
+  --uh-primary-soft: var(--wot-primary-1, #E2F0FF);
   width: 100%;
   box-sizing: border-box;
   position: relative;
@@ -176,7 +176,7 @@ export default {
   right: 0;
   top: 0;
   border-radius: 0 0 0 12rpx;
-  background-color: var(--uh-primary, #b9e424);
+  background-color: var(--uh-primary, #53A3F2);
   padding: 4rpx 16rpx;
   font-size: 20rpx;
   color: #111827;
@@ -260,7 +260,7 @@ export default {
   text-align: center;
   padding: 12rpx 24rpx;
   border-radius: 999rpx;
-  background-color: var(--uh-primary, #b9e424);
+  background-color: var(--uh-primary, #53A3F2);
   border: 2rpx solid rgba(255, 255, 255, 0.80);
   font-size: 24rpx;
   color: #111827;

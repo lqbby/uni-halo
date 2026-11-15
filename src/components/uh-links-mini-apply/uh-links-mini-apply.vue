@@ -373,7 +373,7 @@ watch(() => props.show, (newVal) => {
             />
             <input
               v-model="captchaCode"
-              class="input ml-3 box-border h-[72rpx] flex-1 rounded-xl bg-[#f5f5f5] px-4 text-3xs"
+              class="input ml-3 box-border h-[72rpx] flex-1 rounded-xl bg-gray-100 px-4 text-3xs"
               placeholder="输入图中字符"
             >
           </view>

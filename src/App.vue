@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { onHide, onLaunch, onShow } from '@dcloudio/uni-app'
+import { onHide, onLaunch, onShow, onThemeChange } from '@dcloudio/uni-app'
 import { getCurrentInstance, onMounted, onUnmounted } from 'vue'
 import { navigateToInterceptor } from '@/router/interceptor'
 import { tabbarStore } from '@/tabbar/store'
+import { useThemeStore } from '@/store/theme'
 import { useTokenStore } from '@/store/token'
 import { permission } from '@/router/permission'
 import { useAppConfigStore } from '@/store/appConfig'
@@ -15,6 +16,10 @@ router && permission.install(router)
 
 onLaunch((options) => {
   console.log('App.vue onLaunch', options)
+
+  // 外观主题:同步一次系统外观(明暗双套跟随系统,页面层由 WXSS 媒体查询驱动,
+  // 本 store 只供正文 tagStyle/头图/导航栏等 JS 侧消费)
+  useThemeStore().syncFromSystem()
 
   // 初始化获取配置
   useAppConfigStore().refreshStatic()
@@ -39,6 +44,11 @@ onShow((options) => {
 })
 onHide(() => {
   console.log('App Hide')
+})
+
+// 系统外观切换时同步 JS 侧主题状态(CSS 层由系统媒体查询自动跟随)
+onThemeChange((res) => {
+  useThemeStore().setDark(res.theme === 'dark')
 })
 
 // #ifdef H5

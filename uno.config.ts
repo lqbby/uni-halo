@@ -67,6 +67,7 @@ export default defineConfig({
   // 注意：dialog.ts(.ts 文件)中的工具类不会被 UnoCSS 默认 pipeline 扫描(默认只扫 vue/jsx/tsx/md/html 等)，
   // 弹窗按钮样式常量(config/dialog.ts)里的类必须登记在此 safelist 才会生成 CSS。
   safelist: [
+    // (tabBar 五图标已改走 wd-icon 字体图标,见 tabbar/config.ts,不再需要 unocss 图标 safelist)
     'i-carbon-code',
     'i-carbon-home',
     'i-carbon-user',
@@ -107,9 +108,9 @@ export default defineConfig({
        * 注意：var() 定义的颜色不支持透明度修饰符（bg-primary/15 会静默降级为实色），
        * 如需半透明请用 color-mix 或改用 hex 定义的颜色（如 love）
        */
-      primary: 'var(--wot-color-theme,#B9E424)',
-      secondary: 'var(--wot-color-secondary,#D7F94C)',
-      page: 'var(--wot-color-page,#f6f3ee)',
+      primary: 'var(--wot-color-theme,#53A3F2)',
+      secondary: 'var(--wot-color-secondary,#C6E1FF)',
+      page: 'var(--wot-color-page,#EAEFF5)',
       love: '#f83856',
     },
     fontSize: {

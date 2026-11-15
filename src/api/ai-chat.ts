@@ -14,7 +14,7 @@ const API_PREFIX = '/apis/api.summary.summaraidgpt.lik.cc/v1alpha1'
 const CLIENT_SOURCE_NOTE = [
   '',
   '',
-  '[系统备注] 本请求来自 UniHalo App 端（非浏览器网页端）。',
+  '[系统备注] 本请求来自 LQBBY 小程序端（非浏览器网页端）。',
   '禁止调用 open_halo_resource、open_current_page_link 等内置资源打开工具，禁止输出 openResource/openHaloResource 之类的内置工具参数格式。',
   '如需打开站内页面或文章，在回答末尾另起一行原样输出动作块（JSON 必须单行，禁止用代码块包裹）：',
   '@@UNI_HALO_APP_ACTION@@ {"action":"navigate","name":"页面名称或内容标题","type":"switchTab|navigateTo","url":"页面路径?参数"}',
