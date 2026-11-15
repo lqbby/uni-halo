@@ -160,7 +160,7 @@ function handleOpenLink() {
         v-else
         class="mb-5 h-[320rpx] w-full flex items-center justify-center uh-img-placeholder text-gray-400"
       >
-        <image src="/static/mascot/dafeiyu-empty.png" mode="aspectFit" class="h-[72rpx] w-[72rpx] rounded-[14rpx]" />
+        <image src="/static/mascot/dafeiyu-head.png" mode="aspectFit" class="h-[72rpx] w-[72rpx]" />
       </view>
 
       <view class="text-md text-gray-900 font-bold leading-snug">

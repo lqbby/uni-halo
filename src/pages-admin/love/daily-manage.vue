@@ -220,8 +220,8 @@ onShow(() => {
             v-else
             class="h-16 w-16 flex shrink-0 items-center justify-center rounded-lg from-[#fdeef1] to-[#fff8f9] bg-gradient-to-b text-gray-400"
           >
-            <!-- 第六轮 #18 反转:无图占位换抱箱款(粉渐变盒保留) -->
-            <image src="/static/mascot/dafeiyu-empty.png" mode="aspectFit" class="h-[48rpx] w-[48rpx] rounded-[10rpx]" />
+            <!-- 第六轮 #18 反转:无图占位换大肥鱼(粉渐变盒保留);#21 再换羽化头,抱箱款退役 -->
+            <image src="/static/mascot/dafeiyu-head.png" mode="aspectFit" class="h-[48rpx] w-[48rpx]" />
           </view>
         </view>
         <view

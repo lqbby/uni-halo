@@ -135,7 +135,7 @@ onPageScroll((option: Page.PageScrollOption) => {
                 v-else
                 class="h-16 w-22 flex shrink-0 items-center justify-center uh-img-placeholder text-gray-400"
               >
-                <image src="/static/mascot/dafeiyu-empty.png" mode="aspectFit" class="h-[48rpx] w-[48rpx] rounded-[10rpx]" />
+                <image src="/static/mascot/dafeiyu-head.png" mode="aspectFit" class="h-[48rpx] w-[48rpx]" />
               </view>
               <view class="min-w-0 flex-1">
                 <view class="truncate text-sm text-gray-900 font-bold">

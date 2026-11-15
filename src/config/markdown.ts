@@ -91,9 +91,10 @@ export const markdownConfig = {
      第三轮 #13:格式由 WebP 改 PNG——微信 iOS 端 <image> 对 WebP 解码不可靠(同图在 uh-data-loading
      直引也曾不显示),PNG 全端可靠;
      第四轮 #17:加载占位(loadingGif)换哥哥定稿的羽化透明头(480px 256 色量化约 77KB,羽化渐变
-     目检无色带);失败占位(emptyGif)保持第三轮抱箱款不变——error-img 接通一事已取消,维持现状 */
+     目检无色带);失败占位(emptyGif)当时保持第三轮抱箱款——error-img 接通一事已取消,维持现状;
+     #21(22:42 哥哥点名):emptyGif 也换羽化头,抱箱款 dafeiyu-empty 全站退役删除 */
   loadingGif: '/static/mascot/dafeiyu-head.png',
-  emptyGif: '/static/mascot/dafeiyu-empty.png',
+  emptyGif: '/static/mascot/dafeiyu-head.png',
 }
 
 /**

@@ -179,8 +179,8 @@ onShow(() => {
             </template>
           </wd-img>
           <view v-else class="h-full w-full flex items-center justify-center bg-gray-100 text-gray-300">
-            <!-- 第六轮 #18 图库再扫:封面无图占位换抱箱款,与全站无图占位统一 -->
-            <image src="/static/mascot/dafeiyu-empty.png" mode="aspectFit" class="h-[60rpx] w-[60rpx] rounded-[12rpx]" />
+            <!-- 第六轮 #18 图库再扫:封面无图占位换大肥鱼,与全站无图占位统一;#21 再换羽化头,抱箱款退役 -->
+            <image src="/static/mascot/dafeiyu-head.png" mode="aspectFit" class="h-[60rpx] w-[60rpx]" />
           </view>
         </view>
         <view class="p-3">

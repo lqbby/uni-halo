@@ -74,7 +74,8 @@ const SizeClasses = {
  * 第四轮 #17:loading 态换哥哥定稿的羽化透明头(去白底、边缘羽化、底部强渐隐,直接融进页面底,
  * 无光晕盘/装饰点/底衬,只留头本体 + 浮动动画);
  * 第七轮 #19 改判:empty/error 两态弃抱箱款白贴纸,三态统一羽化头 bare 呈现
- * (贴纸/光晕盘/装饰点全去,与 loading 同一语言;抱箱款 dafeiyu-empty 此后只供内容无图占位) */
+ * (贴纸/光晕盘/装饰点全去,与 loading 同一语言);
+ * #21(22:42 哥哥点名):抱箱款 dafeiyu-empty 全站退役删除,内容无图占位也统一羽化头 */
 const MASCOT_HEAD = '/static/mascot/dafeiyu-head.png'
 
 const sizeClasses = computed(() => {
